@@ -1,64 +1,218 @@
 package app.controladores;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import app.data.MatriculaDAO;
+import app.modelos.Apoderado;
 import app.modelos.Matricula;
 
 @WebServlet("/MatriculaEditarServlet")
 public class MatriculaEditarServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
-	// 🔹 Mostrar formulario (GET)
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    private static final long serialVersionUID = 1L;
 
-		request.getRequestDispatcher("/WEB-INF/EditarMatricula/EditarMatricula.jsp")
-		       .forward(request, response);
-	}
+    private MatriculaDAO dao = new MatriculaDAO();
 
-	// 🔹 Procesar formulario (POST)
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
 
-		String mensaje = "";
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
 
-		try {
-			int idMatricula = Integer.parseInt(request.getParameter("idMatricula"));
-			int idNivel = Integer.parseInt(request.getParameter("idNivel"));
-			int idApoderado = Integer.parseInt(request.getParameter("idApoderado"));
-			String estado = request.getParameter("estado");
-			String observacion = request.getParameter("observacion");
+        request.getRequestDispatcher(
+                "/WEB-INF/EditarMatricula/EditarMatricula.jsp"
+        ).forward(request, response);
+    }
 
-			Matricula m = new Matricula();
-			m.setIdMatricula(idMatricula);
-			m.setIdNivel(idNivel);
-			m.setIdApoderado(idApoderado);
-			m.setEstado(estado);
-			m.setObservacion(observacion);
 
-			MatriculaDAO dao = new MatriculaDAO();
-			boolean resultado = dao.editarMatricula(m);
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
 
-			if (resultado) {
-				mensaje = "✅ Matrícula editada correctamente";
-			} else {
-				mensaje = "❌ No se pudo editar la matrícula";
-			}
+        String accion = request.getParameter("accion");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			mensaje = "❌ Error en el servidor";
-		}
+        if ("buscarMatricula".equals(accion)) {
+            buscarMatricula(request);
+        }
 
-		// 🔹 Enviar mensaje al JSP
-		request.setAttribute("mensaje", mensaje);
+        else if ("editar".equals(accion)) {
+            editarMatricula(request);
+        }
 
-		// 🔹 Volver al JSP
-		request.getRequestDispatcher("/WEB-INF/EditarMatricula/EditarMatricula.jsp")
-		       .forward(request, response);
-	}
+        else if ("buscarApoderado".equals(accion)) {
+            buscarApoderado(request);
+        }
+
+        else if ("cambiarApoderado".equals(accion)) {
+            cambiarApoderado(request);
+        }
+
+        request.getRequestDispatcher(
+                "/WEB-INF/EditarMatricula/EditarMatricula.jsp"
+        ).forward(request, response);
+    }
+
+
+    // buscar matrícula
+    private void buscarMatricula(HttpServletRequest request) {
+
+        String dni = request.getParameter("dni");
+
+        Matricula m = dao.buscarPorDniOCodigo(dni, null);
+
+        if (m != null) {
+            request.setAttribute("matricula", m);
+        } else {
+            request.setAttribute("mensaje", "No se encontró matrícula");
+        }
+    }
+
+
+    // editar matrícula
+    private void editarMatricula(HttpServletRequest request) {
+
+        try {
+
+            Matricula m = new Matricula();
+
+            m.setIdMatricula(
+                Integer.parseInt(request.getParameter("idMatricula"))
+            );
+
+            m.setIdNivel(
+                Integer.parseInt(request.getParameter("idNivel"))
+            );
+
+            m.setIdApoderado(
+                Integer.parseInt(request.getParameter("idApoderado"))
+            );
+
+            m.setEstado(request.getParameter("estado"));
+            m.setObservacion(request.getParameter("observacion"));
+
+            boolean ok = dao.editarMatricula(m);
+
+            request.setAttribute(
+                "mensaje",
+                ok ? "Matrícula actualizada" : "No se pudo actualizar"
+            );
+
+            String dni = request.getParameter("dni");
+
+            if (dni != null) {
+                request.setAttribute(
+                    "matricula",
+                    dao.buscarPorDniOCodigo(dni, null)
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("mensaje", "Error al editar");
+        }
+    }
+
+
+    // buscar apoderado
+    private void buscarApoderado(HttpServletRequest request) {
+
+        try {
+
+            String dniApoderado = request.getParameter("dniApoderado");
+            String dniAlumno = request.getParameter("dniAlumno");
+            String idEstudianteStr = request.getParameter("idEstudiante");
+
+            if (dniAlumno != null) {
+                request.setAttribute(
+                    "matricula",
+                    dao.buscarPorDniOCodigo(dniAlumno, null)
+                );
+            }
+
+            if (idEstudianteStr == null || idEstudianteStr.isEmpty()) {
+                request.setAttribute("mensaje", "Error: estudiante no identificado");
+                return;
+            }
+
+            int idEstudiante = Integer.parseInt(idEstudianteStr);
+
+            Apoderado apo =
+                dao.buscarApoderadoPorDni(dniApoderado, idEstudiante);
+
+            if (apo != null) {
+                request.setAttribute("apoderadoBuscado", apo);
+            } else {
+                request.setAttribute(
+                    "mensaje",
+                    "El apoderado no tiene relación con el estudiante"
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("mensaje", "Error al buscar apoderado");
+        }
+    }
+
+
+    // cambiar apoderado
+    private void cambiarApoderado(HttpServletRequest request) {
+
+        try {
+
+            int idMatricula =
+                Integer.parseInt(request.getParameter("idMatricula"));
+
+            int idEstudiante =
+                Integer.parseInt(request.getParameter("idEstudiante"));
+
+            int idNuevoApoderado =
+                Integer.parseInt(request.getParameter("idNuevoApoderado"));
+
+            String dniAlumno = request.getParameter("dniAlumno");
+
+
+            // validar relación antes de cambiar
+            boolean existe =
+                dao.existeRelacion(idEstudiante, idNuevoApoderado);
+
+            if (!existe) {
+
+                request.setAttribute(
+                    "mensaje",
+                    "No se puede vincular: no existe relación con el estudiante"
+                );
+
+            } else {
+
+                boolean ok =
+                    dao.cambiarApoderado(
+                        idMatricula,
+                        idEstudiante,
+                        idNuevoApoderado
+                    );
+
+                request.setAttribute(
+                    "mensaje",
+                    ok ? "Apoderado cambiado correctamente"
+                       : "No se pudo cambiar"
+                );
+            }
+
+
+            if (dniAlumno != null) {
+                request.setAttribute(
+                    "matricula",
+                    dao.buscarPorDniOCodigo(dniAlumno, null)
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("mensaje", "Error al cambiar apoderado");
+        }
+    }
 }
