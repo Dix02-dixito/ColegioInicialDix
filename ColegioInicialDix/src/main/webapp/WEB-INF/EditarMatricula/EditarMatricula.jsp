@@ -248,7 +248,6 @@ href="${pageContext.request.contextPath}/Contenido/estilos/editarmatricula.css">
                     <select name="estado">
                         <option value="ACTIVO" <%=matricula.getEstado().equals("ACTIVO")?"selected":""%>>ACTIVO</option>
                         <option value="INACTIVO" <%=matricula.getEstado().equals("INACTIVO")?"selected":""%>>INACTIVO</option>
-                        <option value="CANCELADO" <%=matricula.getEstado().equals("CANCELADO")?"selected":""%>>CANCELADO</option>
                     </select>
 
                 </div>

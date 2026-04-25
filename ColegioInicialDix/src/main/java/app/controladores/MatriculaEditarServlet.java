@@ -175,7 +175,7 @@ public class MatriculaEditarServlet extends HttpServlet {
             String dniAlumno = request.getParameter("dniAlumno");
 
 
-            // validar relación antes de cambiar
+            
             boolean existe =
                 dao.existeRelacion(idEstudiante, idNuevoApoderado);
 

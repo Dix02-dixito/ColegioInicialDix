@@ -70,7 +70,7 @@ public class MatriculaDAO implements IMatricula {
 
             String sql =
                 "UPDATE matricula " +
-                "SET id_nivel=?, id_apoderado=?, estado=?, observacion=? " +
+                "SET id_nivel=?	, id_apoderado=?, estado=?, observacion=? " +
                 "WHERE id_matricula=?";
 
             PreparedStatement ps = cn.prepareStatement(sql);
@@ -91,7 +91,7 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // buscar apoderado SOLO si tiene relación
+    // buscar apoderado solo si tiene alguna relacion con el estudiante si no tiene no saldra la alerta de no tiene relacion
     @Override
     public Apoderado buscarApoderadoPorDni(String dni, int idEstudiante) {
 
@@ -136,7 +136,7 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // validar relación
+    // validar relacion con el estudiante
     @Override
     public boolean existeRelacion(int idEstudiante, int idApoderado) {
 
