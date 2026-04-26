@@ -10,7 +10,7 @@ public class Apoderado {
 	    private String correo;
 	    private String telefono;
 	    private String sexo;
-	    private String relacion;
+	    
 	    
 	    public Apoderado() {
 			idApoderado = 0;
@@ -21,7 +21,6 @@ public class Apoderado {
 			correo = "";
 			telefono = "";
 			sexo = "";
-			relacion = "";
 		}
 
 		public int getIdApoderado() {
@@ -88,13 +87,6 @@ public class Apoderado {
 			this.sexo = sexo;
 		}
 
-		public String getRelacion() {
-			return relacion;
-		}
-
-		public void setRelacion(String relacion) {
-			this.relacion = relacion;
-		}
-
+		
 	    
 }

@@ -3,7 +3,7 @@ package app.data;
 import java.sql.*;
 import java.util.*;
 
-import app.controladores.MySQLConexion;
+import app.conectores.MySQLConexion;
 import app.data.interfaces.IMatricula;
 import app.modelos.Apoderado;
 import app.modelos.Matricula;
@@ -70,7 +70,7 @@ public class MatriculaDAO implements IMatricula {
 
             String sql =
                 "UPDATE matricula " +
-                "SET id_nivel=?	, id_apoderado=?, estado=?, observacion=? " +
+                "SET id_nivel=?, id_apoderado=?, estado=?, observacion=? " +
                 "WHERE id_matricula=?";
 
             PreparedStatement ps = cn.prepareStatement(sql);
@@ -91,7 +91,7 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // buscar apoderado solo si tiene alguna relacion con el estudiante si no tiene no saldra la alerta de no tiene relacion
+    // buscar apoderado SOLO si tiene relación
     @Override
     public Apoderado buscarApoderadoPorDni(String dni, int idEstudiante) {
 
@@ -125,7 +125,6 @@ public class MatriculaDAO implements IMatricula {
                 a.setDireccion(rs.getString("direccion"));
                 a.setCorreo(rs.getString("correo"));
 
-                a.setRelacion(rs.getString("relacion"));
             }
 
         } catch (Exception e) {
@@ -136,7 +135,7 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // validar relacion con el estudiante
+    // validar relación
     @Override
     public boolean existeRelacion(int idEstudiante, int idApoderado) {
 
@@ -311,4 +310,56 @@ public class MatriculaDAO implements IMatricula {
 
         return lista;
     }
-}
+
+
+    public boolean existeMatriculaActiva(int idEstudiante) {
+
+        String sql = "SELECT COUNT(*) FROM matricula WHERE id_estudiante=? AND estado='ACTIVO'";
+
+        try (Connection con = MySQLConexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idEstudiante);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al validar matrícula activa: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+
+	public boolean generar(Matricula m) {
+		String sql = "INSERT INTO matricula (id_estudiante, id_apoderado, id_nivel, anio, estado, observacion) VALUES (?, ?, ?, ?, ?, ?)";
+
+	    try (Connection con = MySQLConexion.obtenerConexion();
+	         PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+	        ps.setInt(1, m.getIdEstudiante());
+	        ps.setInt(2, m.getIdApoderado());
+	        ps.setInt(3, m.getIdNivel());
+	        ps.setInt(4, m.getAnio());
+	        ps.setString(5, m.getEstado());
+	        ps.setString(6, m.getObservacion());
+
+	        int filas = ps.executeUpdate();
+
+	        if (filas > 0) {
+	            ResultSet rs = ps.getGeneratedKeys();
+	            if (rs.next()) {
+	                m.setIdMatricula(rs.getInt(1));
+	            }
+	            return true;
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException("Error al generar matrícula: " + e.getMessage());
+	    }
+
+	    return false;
+	}}

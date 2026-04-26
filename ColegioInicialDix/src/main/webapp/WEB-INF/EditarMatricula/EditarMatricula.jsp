@@ -184,7 +184,6 @@ href="${pageContext.request.contextPath}/Contenido/estilos/editarmatricula.css">
             <p><b>Teléfono:</b> <%=apo.getTelefono()%></p>
             <p><b>Dirección:</b> <%=apo.getDireccion()%></p>
             <p><b>Correo:</b> <%=apo.getCorreo()%></p>
-            <p><b>Relación:</b> <%=apo.getRelacion()%></p>
 
         </div>
 

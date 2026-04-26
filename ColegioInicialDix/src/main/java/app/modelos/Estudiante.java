@@ -20,12 +20,12 @@ public class Estudiante {
 		sexo = "";
 	}
 
-	public int getId_estudiante() {
+	public int getIdEstudiante() {
 		return idEstudiante;
 	}
 
-	public void setId_estudiante(int id_estudiante) {
-		this.idEstudiante = id_estudiante;
+	public void setIdEstudiante(int idEstudiante) {
+		this.idEstudiante = idEstudiante;
 	}
 
 	public String getDni() {

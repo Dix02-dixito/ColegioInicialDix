@@ -26,4 +26,8 @@ public interface IMatricula {
     List<String> listarNiveles();
 
     Matricula mapearMatricula(ResultSet rs) throws Exception;
+    
+    public boolean existeMatriculaActiva(int idEstudiante);
+    
+    public boolean generar(Matricula m);
 }
