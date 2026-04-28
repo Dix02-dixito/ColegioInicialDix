@@ -61,12 +61,20 @@ public class MatriculaEditarServlet extends HttpServlet {
 
         String dni = request.getParameter("dni");
 
-        Matricula m = dao.buscarPorDniOCodigo(dni, null);
+        if (dni == null || !dni.matches("\\d{8}")) {
+            request.setAttribute("mensaje", "DNI inválido");
+            return;
+        }
+
+        Matricula m = dao.buscarMatriculaActiva(dni);
 
         if (m != null) {
             request.setAttribute("matricula", m);
         } else {
-            request.setAttribute("mensaje", "No se encontró matrícula");
+            request.setAttribute(
+                "mensaje",
+                "No se encontr una matricula activa de este dni"
+            );
         }
     }
 
@@ -97,7 +105,7 @@ public class MatriculaEditarServlet extends HttpServlet {
 
             request.setAttribute(
                 "mensaje",
-                ok ? "Matrícula actualizada" : "No se pudo actualizar"
+                ok ? "matricula Actualizada" : "No se pudo actualizar la matricula"
             );
 
             String dni = request.getParameter("dni");
@@ -105,13 +113,13 @@ public class MatriculaEditarServlet extends HttpServlet {
             if (dni != null) {
                 request.setAttribute(
                     "matricula",
-                    dao.buscarPorDniOCodigo(dni, null)
+                    dao.buscarMatriculaActiva(dni)
                 );
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensaje", "Error al editar");
+            request.setAttribute("mensaje", "Error al editar la matricula");
         }
     }
 
@@ -128,12 +136,17 @@ public class MatriculaEditarServlet extends HttpServlet {
             if (dniAlumno != null) {
                 request.setAttribute(
                     "matricula",
-                    dao.buscarPorDniOCodigo(dniAlumno, null)
+                    dao.buscarMatriculaActiva(dniAlumno)
                 );
             }
 
+            if (dniApoderado == null || !dniApoderado.matches("\\d{8}")) {
+                request.setAttribute("mensaje", "DNI apoderado inválido");
+                return;
+            }
+
             if (idEstudianteStr == null || idEstudianteStr.isEmpty()) {
-                request.setAttribute("mensaje", "Error: estudiante no identificado");
+                request.setAttribute("mensaje", "Estudiante no identificado");
                 return;
             }
 
@@ -147,7 +160,7 @@ public class MatriculaEditarServlet extends HttpServlet {
             } else {
                 request.setAttribute(
                     "mensaje",
-                    "El apoderado no tiene relación con el estudiante"
+                    "El apoderado no tiene relacion con el estudiante"
                 );
             }
 
@@ -175,7 +188,6 @@ public class MatriculaEditarServlet extends HttpServlet {
             String dniAlumno = request.getParameter("dniAlumno");
 
 
-            
             boolean existe =
                 dao.existeRelacion(idEstudiante, idNuevoApoderado);
 
@@ -183,7 +195,7 @@ public class MatriculaEditarServlet extends HttpServlet {
 
                 request.setAttribute(
                     "mensaje",
-                    "No se puede vincular: no existe relación con el estudiante"
+                    "No se puede vincular: el apoderado no tiene relacion con el estudiante"
                 );
 
             } else {
@@ -198,7 +210,7 @@ public class MatriculaEditarServlet extends HttpServlet {
                 request.setAttribute(
                     "mensaje",
                     ok ? "Apoderado cambiado correctamente"
-                       : "No se pudo cambiar"
+                       : "No se pudo cambiar el apoderado"
                 );
             }
 
@@ -206,7 +218,7 @@ public class MatriculaEditarServlet extends HttpServlet {
             if (dniAlumno != null) {
                 request.setAttribute(
                     "matricula",
-                    dao.buscarPorDniOCodigo(dniAlumno, null)
+                    dao.buscarMatriculaActiva(dniAlumno)
                 );
             }
 

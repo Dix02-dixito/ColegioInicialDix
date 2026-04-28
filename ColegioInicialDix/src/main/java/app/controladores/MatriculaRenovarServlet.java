@@ -9,8 +9,8 @@ import javax.servlet.http.*;
 import app.data.MatriculaDAO;
 import app.modelos.Matricula;
 
-@WebServlet("/MatriculaEliminarServlet")
-public class MatriculaEliminarServlet extends HttpServlet {
+@WebServlet("/MatriculaRenovarServlet")
+public class MatriculaRenovarServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public class MatriculaEliminarServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.getRequestDispatcher(
-                "/WEB-INF/EliminarMatricula/EliminarMatricula.jsp"
+                "/WEB-INF/RenovarMatricula/RenovarMatricula.jsp"
         ).forward(request, response);
     }
 
@@ -34,20 +34,20 @@ public class MatriculaEliminarServlet extends HttpServlet {
         String accion = request.getParameter("accion");
 
         if ("buscarMatricula".equals(accion)) {
-            buscarMatricula(request);
+        	buscarMatriculaInactiva(request);
         }
-        else if ("cancelarMatricula".equals(accion)) {
-            cancelarMatricula(request);
+        else if ("renovarMatricula".equals(accion)) {
+        	renovarMatricula(request);
         }
 
         request.getRequestDispatcher(
-                "/WEB-INF/EliminarMatricula/EliminarMatricula.jsp"
+        		"/WEB-INF/RenovarMatricula/RenovarMatricula.jsp"
         ).forward(request, response);
     }
 
 
-    // buscar matrícula
-    private void buscarMatricula(HttpServletRequest request) {
+    // buscar matricula inactiva
+    private void buscarMatriculaInactiva(HttpServletRequest request) {
 
         String dni = request.getParameter("dni");
 
@@ -56,69 +56,50 @@ public class MatriculaEliminarServlet extends HttpServlet {
             return;
         }
 
-        Matricula m = dao.buscarMatriculaActiva(dni);
+        Matricula m = dao.buscarMatriculaInactiva(dni);
 
         if (m != null) {
             request.setAttribute("matricula", m);
         } else {
-            request.setAttribute("mensaje", "No se encontró matrícula ACTIVA");
+            request.setAttribute("mensaje", "No se encontro matricula inactvia con ese dni");
         }
     }
 
 
-    // cancelar / inactivar matrícula
-    private void cancelarMatricula(HttpServletRequest request) {
+    // ActivarMatricula
+    private void renovarMatricula(HttpServletRequest request) {
 
         try {
 
             String idMatriculaStr = request.getParameter("idMatricula");
-            String estado = request.getParameter("estado");
-            String observacion = request.getParameter("observacion");
             String dni = request.getParameter("dni");
 
-            if (idMatriculaStr == null || estado == null) {
+            if (idMatriculaStr == null) {
                 request.setAttribute("mensaje", "Datos incompletos");
                 return;
             }
 
             int idMatricula = Integer.parseInt(idMatriculaStr);
 
-            boolean ok = false;
-
-            if ("INACTIVO".equals(estado)) {
-
-                ok = dao.editarEstadoMatricula(
-                        idMatricula,
-                        "INACTIVO",
-                        observacion
-                );
-
-            } else if ("CANCELADO".equals(estado)) {
-
-                ok = dao.eliminarMatricula(idMatricula); // elimina de verdad
-
-            } else {
-
-                request.setAttribute("mensaje", "Estado no permitido");
-                return;
-            }
+            boolean ok = dao.renovarMatricula(idMatricula);
 
             request.setAttribute(
                 "mensaje",
-                ok ? "Operación realizada correctamente"
-                   : "No se pudo realizar la operación"
+                ok ? "Matrícula renovada correctamente"
+                   : "No se pudo renovar"
             );
 
+            // ya no debería aparecer porque ya es ACTIVA
             if (dni != null) {
                 request.setAttribute(
                     "matricula",
-                    dao.buscarMatriculaActiva(dni)
+                    dao.buscarMatriculaInactiva(dni)
                 );
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensaje", "Error en la operación");
+            request.setAttribute("mensaje", "Error al renovar");
         }
     }
 }

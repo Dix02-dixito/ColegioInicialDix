@@ -7,13 +7,15 @@ import app.modelos.Matricula;
 
 public interface IMatricula {
 
-    Matricula buscarPorDniOCodigo(String dni, Integer id);
+    Matricula buscarMatriculaActiva(String dni);
+    
+    Matricula buscarMatriculaInactiva(String dni);
 
     boolean editarMatricula(Matricula matricula);
 
     boolean renovarMatricula(int idMatricula);
 
-    boolean cancelarMatricula(int idMatricula);
+    boolean eliminarMatricula(int idMatricula);
 
     boolean cambiarApoderado(int idMatricula, int idEstudiante, int idNuevoApoderado);
 

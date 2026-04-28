@@ -16,40 +16,19 @@ public class MatriculaDAO implements IMatricula {
         cn = MySQLConexion.obtenerConexion();
     }
 
-
     @Override
-    public Matricula buscarPorDniOCodigo(String dni, Integer id) {
+    public Matricula buscarMatriculaActiva(String dni) {
 
         Matricula m = null;
 
         try {
 
-            String sql =
-                "SELECT m.*, " +
-                "e.nombres, e.apellidos, e.dni, " +
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_matricula_activa_por_dni(?)}");
 
-                "a.nombres AS apoderado, " +
-                "a.apellidos AS apellido_apoderado, " +
-                "a.telefono, a.direccion, a.correo, " +
+            cs.setString(1, dni);
 
-                "ea.relacion, " +
-                "n.nombre AS nivel " +
-
-                "FROM matricula m " +
-                "INNER JOIN estudiante e ON m.id_estudiante = e.id_estudiante " +
-                "INNER JOIN apoderado a ON m.id_apoderado = a.id_apoderado " +
-
-                "INNER JOIN estudiante_apoderado ea " +
-                "ON ea.id_estudiante = m.id_estudiante " +
-                "AND ea.id_apoderado = m.id_apoderado " +
-
-                "INNER JOIN nivel n ON m.id_nivel = n.id_nivel " +
-                "WHERE e.dni = ?";
-
-            PreparedStatement ps = cn.prepareStatement(sql);
-            ps.setString(1, dni);
-
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = cs.executeQuery();
 
             if (rs.next()) {
                 m = mapearMatricula(rs);
@@ -68,20 +47,16 @@ public class MatriculaDAO implements IMatricula {
 
         try {
 
-            String sql =
-                "UPDATE matricula " +
-                "SET id_nivel=?, id_apoderado=?, estado=?, observacion=? " +
-                "WHERE id_matricula=?";
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_editar_matricula(?,?,?,?,?)}");
 
-            PreparedStatement ps = cn.prepareStatement(sql);
+            cs.setInt(1, m.getIdMatricula());
+            cs.setInt(2, m.getIdNivel());
+            cs.setInt(3, m.getIdApoderado());
+            cs.setString(4, m.getEstado());
+            cs.setString(5, m.getObservacion());
 
-            ps.setInt(1, m.getIdNivel());
-            ps.setInt(2, m.getIdApoderado());
-            ps.setString(3, m.getEstado());
-            ps.setString(4, m.getObservacion());
-            ps.setInt(5, m.getIdMatricula());
-
-            return ps.executeUpdate() > 0;
+            return cs.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,7 +66,6 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // buscar apoderado SOLO si tiene relación
     @Override
     public Apoderado buscarApoderadoPorDni(String dni, int idEstudiante) {
 
@@ -99,19 +73,13 @@ public class MatriculaDAO implements IMatricula {
 
         try {
 
-            String sql =
-                "SELECT a.*, ea.relacion " +
-                "FROM apoderado a " +
-                "INNER JOIN estudiante_apoderado ea " +
-                "ON a.id_apoderado = ea.id_apoderado " +
-                "WHERE ea.id_estudiante = ? AND a.dni = ?";
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_apoderado_relacion(?,?)}");
 
-            PreparedStatement ps = cn.prepareStatement(sql);
+            cs.setString(1, dni);
+            cs.setInt(2, idEstudiante);
 
-            ps.setInt(1, idEstudiante);
-            ps.setString(2, dni);
-
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = cs.executeQuery();
 
             if (rs.next()) {
 
@@ -135,24 +103,22 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // validar relación
     @Override
     public boolean existeRelacion(int idEstudiante, int idApoderado) {
 
         try {
 
-            String sql =
-                "SELECT * FROM estudiante_apoderado " +
-                "WHERE id_estudiante=? AND id_apoderado=?";
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_existe_relacion(?,?)}");
 
-            PreparedStatement ps = cn.prepareStatement(sql);
+            cs.setInt(1, idEstudiante);
+            cs.setInt(2, idApoderado);
 
-            ps.setInt(1, idEstudiante);
-            ps.setInt(2, idApoderado);
+            ResultSet rs = cs.executeQuery();
 
-            ResultSet rs = ps.executeQuery();
-
-            return rs.next();
+            if (rs.next()) {
+                return rs.getInt("existe") > 0;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,21 +128,161 @@ public class MatriculaDAO implements IMatricula {
     }
 
 
-    // cambiar apoderado
     @Override
     public boolean cambiarApoderado(int idMatricula, int idEstudiante, int idNuevoApoderado) {
 
         try {
 
-            String sql =
-                "UPDATE matricula SET id_apoderado=? WHERE id_matricula=?";
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_cambiar_apoderado(?,?)}");
 
-            PreparedStatement ps = cn.prepareStatement(sql);
+            cs.setInt(1, idMatricula);
+            cs.setInt(2, idNuevoApoderado);
 
-            ps.setInt(1, idNuevoApoderado);
-            ps.setInt(2, idMatricula);
+            return cs.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public boolean renovarMatricula(int idMatricula) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_renovar_matricula(?)}");
+
+            cs.setInt(1, idMatricula);
+
+            return cs.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public boolean eliminarMatricula(int idMatricula) {
+
+        try {
+
+            PreparedStatement ps = cn.prepareStatement(
+                "DELETE FROM matricula WHERE id_matricula=?"
+            );
+
+            ps.setInt(1, idMatricula);
 
             return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<String> listarNiveles() {
+
+        List<String> lista = new ArrayList<>();
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_listar_niveles()}");
+
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+                lista.add(rs.getString("nombre"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+
+    @Override
+    public List<Matricula> listarRelacionApoderadoEstudiante(int idEstudiante) {
+
+        List<Matricula> lista = new ArrayList<>();
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_listar_relaciones(?)}");
+
+            cs.setInt(1, idEstudiante);
+
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+
+                Matricula m = new Matricula();
+
+                m.setNombreApoderado(rs.getString("nombres"));
+                m.setRelacion(rs.getString("relacion"));
+
+                lista.add(m);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    @Override
+    public boolean existeMatriculaActiva(int idEstudiante) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_existe_matricula_activa(?)}");
+
+            cs.setInt(1, idEstudiante);
+
+            ResultSet rs = cs.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("total") > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean generar(Matricula m) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_generar_matricula(?,?,?,?,?,?)}");
+
+            cs.setInt(1, m.getIdEstudiante());
+            cs.setInt(2, m.getIdApoderado());
+            cs.setInt(3, m.getIdNivel());
+            cs.setInt(4, m.getAnio());
+            cs.setString(5, m.getEstado());
+            cs.setString(6, m.getObservacion());
+
+            return cs.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,20 +315,19 @@ public class MatriculaDAO implements IMatricula {
 
         return m;
     }
-
-
-    @Override
-    public boolean renovarMatricula(int idMatricula) {
+    
+    public boolean editarEstadoMatricula(int idMatricula, String estado, String observacion) {
 
         try {
 
-            PreparedStatement ps = cn.prepareStatement(
-                "UPDATE matricula SET estado='ACTIVO' WHERE id_matricula=?"
-            );
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_editar_estado_matricula(?,?,?)}");
 
-            ps.setInt(1, idMatricula);
+            cs.setInt(1, idMatricula);
+            cs.setString(2, estado);
+            cs.setString(3, observacion);
 
-            return ps.executeUpdate() > 0;
+            return cs.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -230,136 +335,28 @@ public class MatriculaDAO implements IMatricula {
 
         return false;
     }
+    
+    public Matricula buscarMatriculaInactiva(String dni) {
 
-
-    @Override
-    public boolean cancelarMatricula(int idMatricula) {
-
-        try {
-
-            PreparedStatement ps = cn.prepareStatement(
-                "UPDATE matricula SET estado='CANCELADO' WHERE id_matricula=?"
-            );
-
-            ps.setInt(1, idMatricula);
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-
-    @Override
-    public List<String> listarNiveles() {
-
-        List<String> lista = new ArrayList<>();
+        Matricula m = null;
 
         try {
 
-            ResultSet rs = cn.prepareStatement(
-                "SELECT nombre FROM nivel"
-            ).executeQuery();
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_matricula_inactiva_por_dni(?)}");
 
-            while (rs.next()) {
-                lista.add(rs.getString("nombre"));
-            }
+            cs.setString(1, dni);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return lista;
-    }
-
-
-    @Override
-    public List<Matricula> listarRelacionApoderadoEstudiante(int idEstudiante) {
-
-        List<Matricula> lista = new ArrayList<>();
-
-        try {
-
-            String sql =
-                "SELECT ea.relacion, a.nombres " +
-                "FROM estudiante_apoderado ea " +
-                "INNER JOIN apoderado a ON ea.id_apoderado = a.id_apoderado " +
-                "WHERE ea.id_estudiante=?";
-
-            PreparedStatement ps = cn.prepareStatement(sql);
-            ps.setInt(1, idEstudiante);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                Matricula m = new Matricula();
-
-                m.setNombreApoderado(rs.getString("nombres"));
-                m.setRelacion(rs.getString("relacion"));
-
-                lista.add(m);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return lista;
-    }
-
-
-    public boolean existeMatriculaActiva(int idEstudiante) {
-
-        String sql = "SELECT COUNT(*) FROM matricula WHERE id_estudiante=? AND estado='ACTIVO'";
-
-        try (Connection con = MySQLConexion.obtenerConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, idEstudiante);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = cs.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                m = mapearMatricula(rs);
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al validar matrícula activa: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        return false;
+        return m;
     }
-
-
-	public boolean generar(Matricula m) {
-		String sql = "INSERT INTO matricula (id_estudiante, id_apoderado, id_nivel, anio, estado, observacion) VALUES (?, ?, ?, ?, ?, ?)";
-
-	    try (Connection con = MySQLConexion.obtenerConexion();
-	         PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-
-	        ps.setInt(1, m.getIdEstudiante());
-	        ps.setInt(2, m.getIdApoderado());
-	        ps.setInt(3, m.getIdNivel());
-	        ps.setInt(4, m.getAnio());
-	        ps.setString(5, m.getEstado());
-	        ps.setString(6, m.getObservacion());
-
-	        int filas = ps.executeUpdate();
-
-	        if (filas > 0) {
-	            ResultSet rs = ps.getGeneratedKeys();
-	            if (rs.next()) {
-	                m.setIdMatricula(rs.getInt(1));
-	            }
-	            return true;
-	        }
-
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error al generar matrícula: " + e.getMessage());
-	    }
-
-	    return false;
-	}}
+}

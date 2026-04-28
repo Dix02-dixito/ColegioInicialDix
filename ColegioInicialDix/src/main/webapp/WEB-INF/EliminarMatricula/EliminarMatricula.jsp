@@ -3,7 +3,6 @@ contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 
 <%@ page import="app.modelos.Matricula"%>
-<%@ page import="app.modelos.Apoderado"%>
 
 <%
 Matricula matricula = (Matricula) request.getAttribute("matricula");
@@ -14,7 +13,7 @@ String mensaje = (String) request.getAttribute("mensaje");
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Eliminar Matricula</title>
+<title>Cancelar Matrícula</title>
 
 <link rel="stylesheet"
 href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css">
@@ -23,24 +22,39 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
 <body>
 
 <div class="sidebar">
+
     <h2>Dix Academy</h2>
-    <a href="#">Inicio</a>
-    <a href="#">Generar Matricula</a>
-    <a href="#">Editar Matrícula</a>
-    <a href="#">Renovar Matrícula</a>
-    <a href="#">Cancelar Matrícula</a>
+
+    <a href="${pageContext.request.contextPath}/InicioServlet">Inicio</a>
+
+    <a href="${pageContext.request.contextPath}/MatriculaServlet">
+        Generar Matrícula
+    </a>
+
+    <a href="${pageContext.request.contextPath}/MatriculaEditarServlet">
+        Editar Matrícula
+    </a>
+
+    <a href="${pageContext.request.contextPath}/MatriculaRenovarServlet">
+        Renovar Matrícula
+    </a>
+
+    <a href="${pageContext.request.contextPath}/MatriculaEliminarServlet">
+        Cancelar Matrícula
+    </a>
+
     <a href="#">Apoderados</a>
     <a href="#">Estudiantes</a>
     <a href="#">Actividad</a>
-</div>
 
+</div>
 <div class="main">
 
     <div class="top">
-        <h2>Eliminar Matricula</h2>
+        <h2>Cancelar Matrícula</h2>
     </div>
 
-    <!-- buscar matricula -->
+    <!-- buscar -->
     <div class="box">
 
         <h3>Buscar Matrícula</h3>
@@ -54,7 +68,13 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
 
                 <div class="col">
                     <label>DNI</label>
-                    <input type="text" name="dni" placeholder="Ingrese DNI del estudiante">
+                    <input type="text"
+                           name="dni"
+                           placeholder="Ingrese DNI del estudiante"
+                           maxlength="8"
+                           pattern="[0-9]{8}"
+                           required
+                           oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                 </div>
 
                 <div class="col">
@@ -71,13 +91,12 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
 
 <% if(matricula != null){ %>
 
-    <!-- datos estudiante -->
+    <!-- estudiante -->
     <div class="box">
 
         <h3>Datos del Estudiante</h3>
 
         <div class="row">
-
             <div class="col">
                 <label>Nombres</label>
                 <input value="<%=matricula.getNombresEstudiante()%>" disabled>
@@ -87,11 +106,9 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
                 <label>Apellidos</label>
                 <input value="<%=matricula.getApellidosEstudiante()%>" disabled>
             </div>
-
         </div>
 
         <div class="row">
-
             <div class="col">
                 <label>DNI</label>
                 <input value="<%=matricula.getDni()%>" disabled>
@@ -101,7 +118,6 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
                 <label>Año</label>
                 <input value="<%=matricula.getAnio()%>" disabled>
             </div>
-
         </div>
 
     </div>
@@ -113,7 +129,6 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
         <h3>Datos del Apoderado</h3>
 
         <div class="row">
-
             <div class="col">
                 <label>Nombre</label>
                 <input value="<%=matricula.getNombreApoderado()%>" disabled>
@@ -123,17 +138,16 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
                 <label>Relación</label>
                 <input value="<%=matricula.getRelacion()%>" disabled>
             </div>
-
         </div>
 
     </div>
 
 
-    <!-- editar -->
+    <!-- cancelar -->
     <form action="${pageContext.request.contextPath}/MatriculaEliminarServlet"
           method="post">
 
-        <input type="hidden" name="accion" value="editar">
+        <input type="hidden" name="accion" value="cancelarMatricula">
 
         <input type="hidden" name="dni" value="<%=matricula.getDni()%>">
 
@@ -141,14 +155,10 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
                name="idMatricula"
                value="<%=matricula.getIdMatricula()%>">
 
-        <input type="hidden"
-               name="idApoderado"
-               value="<%=matricula.getIdApoderado()%>">
-
 
         <div class="box">
 
-            <h3>Datos de Matrícula</h3>
+            <h3>Acción</h3>
 
             <div class="row">
 
@@ -156,23 +166,29 @@ href="${pageContext.request.contextPath}/Contenido/estilos/eliminarMatricula.css
 
                     <label>Estado</label>
 
-                    <select name="estado">
-                        <option value="ACTIVO" <%=matricula.getEstado().equals("ACTIVO")?"selected":""%>>ACTIVO</option>
-                        <option value="INACTIVO" <%=matricula.getEstado().equals("INACTIVO")?"selected":""%>>INACTIVO</option>
-                        <option value="CANCELADO" <%=matricula.getEstado().equals("CANCELADO")?"selected":""%>>CANCELADO</option>
+                    <select name="estado" required>
+                        <option value="">Seleccione</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                        <option value="CANCELADO">CANCELADO</option>
                     </select>
 
                 </div>
 
             </div>
 
-            <label>Observación</label>
-            <textarea name="observacion"><%=matricula.getObservacion()==null?"":matricula.getObservacion()%></textarea>
+            <label>Motivo</label>
+            <textarea name="observacion"></textarea>
 
         </div>
 
         <div class="guardar">
-            <button type="submit" class="btn">Eliminar Matricula</button>
+
+            <button type="submit"
+                    class="btn"
+                    onclick="return confirm('¿Seguro de realizar la operacion?')">
+                Guardar Cambios
+            </button>
+
         </div>
 
     </form>
