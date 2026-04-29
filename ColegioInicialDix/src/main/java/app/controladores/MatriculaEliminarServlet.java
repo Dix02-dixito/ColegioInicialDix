@@ -9,7 +9,7 @@ import javax.servlet.http.*;
 import app.data.MatriculaDAO;
 import app.modelos.Matricula;
 
-@WebServlet("/MatriculaEliminarServlet")
+@WebServlet("/Matricula/Eliminar")
 public class MatriculaEliminarServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

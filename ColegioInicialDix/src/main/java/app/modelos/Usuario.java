@@ -5,9 +5,10 @@ public class Usuario {
     private int id;
     private String codigo;
     private String nombre;
-    private String usuario; // será el correo
+    private String usuario; // será el código
     private String contrasena;
     private String rol;
+    private String correo;
 
     public Usuario() {}
 
@@ -61,4 +62,11 @@ public class Usuario {
     public void setRol(String rol) { 
     	this.rol = rol;
     	}
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
 }
