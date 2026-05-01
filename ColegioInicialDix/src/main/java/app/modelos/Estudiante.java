@@ -11,6 +11,10 @@ public class Estudiante {
 	private Date fechaNacimiento;
 	private String sexo;
 	
+	private String nombreApoderado;
+	private String relacion;
+	
+	
 	public Estudiante() {
 		idEstudiante = 0;
 		dni = "";
@@ -68,7 +72,21 @@ public class Estudiante {
 		this.sexo = sexo;
 	}
 	
-	
+	public String getNombreApoderado() {
+	    return nombreApoderado;
+	}
+
+	public void setNombreApoderado(String nombreApoderado) {
+	    this.nombreApoderado = nombreApoderado;
+	}
+
+	public String getRelacion() {
+	    return relacion;
+	}
+
+	public void setRelacion(String relacion) {
+	    this.relacion = relacion;
+	}
 	
 	
 }

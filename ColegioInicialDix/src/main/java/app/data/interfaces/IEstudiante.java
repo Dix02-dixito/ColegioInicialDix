@@ -5,13 +5,19 @@ import java.util.List;
 
 public interface IEstudiante {
 
-    // registrar
-    public boolean guardar(Estudiante e);
+    Estudiante buscarPorDni(String dni);
 
-    // por id
-    public Estudiante buscarPorId(int id);
+    boolean registrarEstudiante(Estudiante e);
 
-    // por dni
-    public Estudiante buscarPorDni(String dni);
+    boolean editarEstudiante(Estudiante e);
 
-    public List<Estudiante> listar(); }
+    boolean eliminarEstudiante(int idEstudiante);
+
+    List<Estudiante> listarEstudiantes();
+
+    boolean existeDni(String dni);
+
+    boolean tieneMatricula(int idEstudiante);
+    
+    boolean insertarRelacion(int idEstudiante, int idApoderado, String relacion);
+}

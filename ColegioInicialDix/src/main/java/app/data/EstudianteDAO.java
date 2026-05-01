@@ -1,97 +1,256 @@
 package app.data;
 
 import java.sql.Connection;
-
-import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import app.conectores.MySQLConexion;
+import app.data.interfaces.IEstudiante;
 import app.modelos.Estudiante;
 
-public class EstudianteDAO {
+public class EstudianteDAO implements IEstudiante {
 
-    public boolean guardar(Estudiante e) {
+    private Connection cn;
 
-        String sql = "INSERT INTO estudiante (dni, nombres, apellidos, fecha_nacimiento, sexo) VALUES (?, ?, ?, ?, ?)";
-
-        try (Connection con = MySQLConexion.obtenerConexion();
-             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-
-        	ps.setString(0, e.getDni());
-        	ps.setString(1, e.getNombres());
-            ps.setString(2, e.getApellidos());
-            ps.setDate(3, e.getFechaNacimiento());
-            ps.setString(4, e.getSexo());
-
-            int filas = ps.executeUpdate();
-
-            if (filas > 0) {
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    e.setDni(rs.getString(1)); 
-                }
-                return true;
-            }
-
-            return false;
-
-        } catch (Exception ex) {
-            throw new RuntimeException("Error al guardar estudiante: " + ex.getMessage());
-        }
+    public EstudianteDAO(){
+        cn = MySQLConexion.obtenerConexion();
     }
 
+    @Override
     public Estudiante buscarPorDni(String dni) {
 
-    	String sql = "SELECT * FROM estudiante WHERE dni = ?";
+        Estudiante e = null;
 
-        try (Connection con = MySQLConexion.obtenerConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try {
 
-            ps.setString(1, dni);
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_estudiante_relacion(?)}");
 
-            ResultSet rs = ps.executeQuery();
+            cs.setString(1, dni);
 
-            if (rs.next()) {
-                Estudiante e = new Estudiante();
+            ResultSet rs = cs.executeQuery();
 
-                e.setIdEstudiante(rs.getInt("id_estudiante"));
-                e.setDni(rs.getString("dni"));
-                e.setNombres(rs.getString("nombres"));
-                e.setApellidos(rs.getString("apellidos"));
-
-                return e;
+            if(rs.next()){
+                e = mapear(rs);
+                e.setNombreApoderado(rs.getString("nombre_apoderado"));
+                e.setRelacion(rs.getString("relacion"));
             }
 
-        } catch (Exception e) {
-            e.printStackTrace(); // 🔥 IMPORTANTE PARA VER ERROR REAL
-            throw new RuntimeException("Error al buscar estudiante");
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        return null;
+        return e;
     }
 
-    public List<Estudiante> listar() {
+    @Override
+    public boolean registrarEstudiante(Estudiante e) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_registrar_estudiante(?,?,?,?,?)}");
+
+            cs.setString(1, e.getDni());
+            cs.setString(2, e.getNombres());
+            cs.setString(3, e.getApellidos());
+            cs.setDate(4, e.getFechaNacimiento());
+            cs.setString(5, e.getSexo());
+
+            cs.execute();
+            return true;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean editarEstudiante(Estudiante e) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_editar_estudiante(?,?,?,?,?)}");
+
+            cs.setString(1, e.getDni());
+            cs.setString(2, e.getNombres());
+            cs.setString(3, e.getApellidos());
+            cs.setDate(4, e.getFechaNacimiento());
+            cs.setString(5, e.getSexo());
+
+            cs.execute();
+            return true;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean eliminarEstudiante(int idEstudiante) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_eliminar_estudiante(?)}");
+
+            cs.setInt(1, idEstudiante);
+
+            return cs.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<Estudiante> listarEstudiantes() {
 
         List<Estudiante> lista = new ArrayList<>();
-        String sql = "SELECT * FROM estudiante";
 
-        try (Connection con = MySQLConexion.obtenerConexion();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try {
 
-            while (rs.next()) {
-                lista.add(new Estudiante(
-                ));
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_listar_estudiantes()}");
+
+            ResultSet rs = cs.executeQuery();
+
+            while(rs.next()){
+                lista.add(mapear(rs));
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al listar estudiantes");
+            e.printStackTrace();
         }
 
         return lista;
     }
 
-	
+    @Override
+    public boolean existeDni(String dni) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_existe_dni(?)}");
+
+            cs.setString(1, dni);
+
+            ResultSet rs = cs.executeQuery();
+
+            if(rs.next()){
+                return rs.getInt("existe") > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean tieneMatricula(int idEstudiante) {
+
+        try {
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_tiene_matricula_por_id(?)}");
+
+            cs.setInt(1, idEstudiante);
+
+            ResultSet rs = cs.executeQuery();
+
+            if(rs.next()){
+                return rs.getInt("tiene") > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public int obtenerIdPorDni(String dni) {
+        try {
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_estudiante_dni(?)}");
+
+            cs.setString(1, dni);
+            ResultSet rs = cs.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id_estudiante");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int obtenerIdApoderadoPorDni(String dni) {
+        try {
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_apoderado_dni(?)}");
+
+            cs.setString(1, dni);
+
+            ResultSet rs = cs.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id_apoderado");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean insertarRelacion(int idEstudiante, int idApoderado, String relacion){
+
+        try{
+
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_insertar_relacion(?,?,?)}");
+
+            cs.setInt(1, idEstudiante);
+            cs.setInt(2, idApoderado);
+            cs.setString(3, relacion);
+
+            return cs.executeUpdate() > 0;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private Estudiante mapear(ResultSet rs) throws Exception {
+
+        Estudiante e = new Estudiante();
+
+        e.setIdEstudiante(rs.getInt("id_estudiante"));
+        e.setDni(rs.getString("dni"));
+        e.setNombres(rs.getString("nombres"));
+        e.setApellidos(rs.getString("apellidos"));
+        e.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
+        e.setSexo(rs.getString("sexo"));
+
+        return e;
+    }
 }
