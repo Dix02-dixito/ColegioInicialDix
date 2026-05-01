@@ -85,9 +85,10 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
 
             Estudiante e = obtenerDatos(request);
 
-            boolean ok = dao.registrarEstudiante(e);
+            // obtener id real seguro
+            int idEstudiante = dao.registrarYRetornarId(e);
 
-            if (!ok) {
+            if (idEstudiante == 0) {
                 request.setAttribute("mensaje", "Error al registrar");
                 return;
             }
@@ -97,15 +98,33 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
 
             if (dniApoderado != null && !dniApoderado.isEmpty()) {
 
-                int idEstudiante = dao.obtenerIdPorDni(dni);
                 int idApoderado = dao.obtenerIdApoderadoPorDni(dniApoderado);
 
-                if (idApoderado > 0) {
-                    dao.insertarRelacion(idEstudiante, idApoderado, relacion);
+                if (idApoderado == 0) {
+                    request.setAttribute("mensaje", "Apoderado no existe");
+                    return;
+                }
+
+                boolean okRel = dao.insertarRelacion(idEstudiante, idApoderado, relacion);
+
+                if (!okRel) {
+                    request.setAttribute("mensaje", "Error al guardar relacion");
+                    return;
+                }
+                
+                //validacion para que no se pueda agregar numeros en nombre y apellido al crear y actualizar
+                String nombres = request.getParameter("nombres");
+                String apellidos = request.getParameter("apellidos");
+
+                if (!nombres.matches("[A-Za-zÁÉÍÓÚáéíóúñÑ ]+") ||
+                    !apellidos.matches("[A-Za-zÁÉÍÓÚáéíóúñÑ ]+")) {
+
+                    request.setAttribute("mensaje", "Solo se permiten letras");
+                    return;
                 }
             }
 
-            request.setAttribute("mensaje", "Estudiante registrado");
+            request.setAttribute("mensaje", "Estudiante registrado correctamente");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,6 +158,17 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", "Error en edicion");
+        }
+        
+      //validacion para que no se pueda agregar numeros en nombre y apellido al crear y actualizar
+        String nombres = request.getParameter("nombres");
+        String apellidos = request.getParameter("apellidos");
+
+        if (!nombres.matches("[A-Za-zÁÉÍÓÚáéíóúñÑ ]+") ||
+            !apellidos.matches("[A-Za-zÁÉÍÓÚáéíóúñÑ ]+")) {
+
+            request.setAttribute("mensaje", "Solo se permiten letras");
+            return;
         }
     }
 

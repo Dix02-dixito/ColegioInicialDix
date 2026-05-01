@@ -89,13 +89,21 @@ value="<%=est!=null?est.getDni():""%>">
 
 <div class="col">
 <label>Nombres</label>
-<input name="nombres" class="editable"
+<input name="nombres"
+class="editable"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"
+title="Solo letras"
+oninput="soloLetras(this)"
 value="<%=est!=null?est.getNombres():""%>" readonly>
 </div>
 
 <div class="col">
 <label>Apellidos</label>
-<input name="apellidos" class="editable"
+<input name="apellidos"
+class="editable"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"
+title="Solo letras"
+oninput="soloLetras(this)"
 value="<%=est!=null?est.getApellidos():""%>" readonly>
 </div>
 

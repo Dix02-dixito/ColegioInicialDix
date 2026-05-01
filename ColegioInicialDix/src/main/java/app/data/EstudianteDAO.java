@@ -1,9 +1,11 @@
 package app.data;
 
 import java.sql.Connection;
+
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,4 +255,35 @@ public class EstudianteDAO implements IEstudiante {
 
         return e;
     }
+    
+    public int registrarYRetornarId(Estudiante e) {
+
+        try {
+
+            PreparedStatement ps = cn.prepareStatement(
+                "INSERT INTO estudiante(dni, nombres, apellidos, fecha_nacimiento, sexo) VALUES (?,?,?,?,?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
+            );
+
+            ps.setString(1, e.getDni());
+            ps.setString(2, e.getNombres());
+            ps.setString(3, e.getApellidos());
+            ps.setDate(4, e.getFechaNacimiento());
+            ps.setString(5, e.getSexo());
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return 0;
+    }
+    
 }
