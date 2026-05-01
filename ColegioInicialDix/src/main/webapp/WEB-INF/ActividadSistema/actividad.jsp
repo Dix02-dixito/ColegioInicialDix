@@ -47,7 +47,9 @@
     <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
     <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
     <hr>
-    <a href="Logout" style="color:red;">Cerrar sesión</a>
+    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
+    Cerrar sesión
+</a>
 </div>
 
 <div class="main">
