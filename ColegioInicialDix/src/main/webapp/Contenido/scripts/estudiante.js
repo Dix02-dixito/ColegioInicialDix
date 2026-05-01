@@ -28,3 +28,7 @@ function confirmarEliminar(){
 function soloNumeros(input){
     input.value = input.value.replace(/[^0-9]/g,'');
 }
+
+function soloLetras(input){
+    input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g,'');
+}
