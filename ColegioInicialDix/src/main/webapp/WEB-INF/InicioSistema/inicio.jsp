@@ -28,15 +28,11 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Dix Academy</h2>
-    <a href="inicio.jsp">Inicio</a>
-    <a href="${pageContext.request.contextPath}/MatriculaRegistrar">Generar Matrícula</a>
-    <a href="${pageContext.request.contextPath}/MatriculaEditarServlet">Editar Matrícula</a>
-    <a href="#">Renovar Matrícula</a>
-    <a href="#">Cancelar Matrícula</a>
-    <a href="${pageContext.request.contextPath}/MantenimientoApoderado">Apoderados</a>
-    <a href="#">Estudiantes</a>
-    <a href="${pageContext.request.contextPath}/actividad">Actividad</a>
-
+    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
+    <a href="#">MATRICULA</a>
+	<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
+    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
     <hr>
     <a href="Logout" style="color:red;">Cerrar sesión</a>
 </div>

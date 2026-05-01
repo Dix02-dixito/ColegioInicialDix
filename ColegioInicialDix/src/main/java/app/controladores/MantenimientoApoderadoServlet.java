@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import app.data.ApoderadoDAO;
 import app.modelos.Apoderado;
 
-@WebServlet("/MantenimientoApoderado")
+@WebServlet("/Mantenimiento/Apoderado")
 public class MantenimientoApoderadoServlet extends HttpServlet {
 
 private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ switch (accion) {
     case "listar":
     List<Apoderado> lista = dao.listarApoderado();
     request.setAttribute("lista", lista);
-    request.getRequestDispatcher("WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
+    request.getRequestDispatcher("/WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
            .forward(request, response);
     break;
 
@@ -43,7 +43,7 @@ case "buscar":
     }
 
     request.setAttribute("lista", dao.listarApoderado());
-    request.getRequestDispatcher("WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
+    request.getRequestDispatcher("/WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
            .forward(request, response);
     break;
 
@@ -76,7 +76,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    request.setAttribute("error", "⚠️ El DNI ya existe");
 	    request.setAttribute("lista", dao.listarApoderado());
 	
-	    request.getRequestDispatcher("WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
+	    request.getRequestDispatcher("/WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
 	           .forward(request, response);
 	    return;
 	}
@@ -91,7 +91,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	
 	request.setAttribute("lista", dao.listarApoderado());
 	
-	request.getRequestDispatcher("WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
+	request.getRequestDispatcher("/WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
 	           .forward(request, response);
 	
 	} else if (accion.equals("actualizar")) {

@@ -19,7 +19,7 @@
     <div class="lado-der">
 
         <div class="logo-box">
-            <img src="${pageContext.request.contextPath}/Contenido/Multimedia/Imagen/insignia.jpg" alt="Insignia">
+           <img src="${pageContext.request.contextPath}/Multimedia/imagenes/insignia.jpg" alt="Insignia">
         </div>
 
         <!-- TU LOGIN (intacto) -->

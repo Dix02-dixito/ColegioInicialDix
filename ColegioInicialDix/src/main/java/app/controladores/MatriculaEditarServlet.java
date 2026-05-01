@@ -10,7 +10,7 @@ import app.data.MatriculaDAO;
 import app.modelos.Apoderado;
 import app.modelos.Matricula;
 
-@WebServlet("/MatriculaEditarServlet")
+@WebServlet("/Matricula/Editar")
 public class MatriculaEditarServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

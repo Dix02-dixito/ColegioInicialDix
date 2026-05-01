@@ -14,47 +14,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Mantenimiento Apoderado</title>
-
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/Contenido/estilos/editarmatricula.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/apoderado.css">
 
 <!-- ALERTAS PRO -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<style>
-.apo-box { margin-top:20px; }
-.apo-tabla { width:100%; border-collapse:separate; border-spacing:0 8px; }
-.apo-tabla th, .apo-tabla td { padding:10px; }
-
-/* BOTON ELIMINAR BONITO */
-.btn-eliminar-icon {
-    background:#e74c3c;
-    border:none;
-    color:white;
-    padding:6px 10px;
-    border-radius:8px;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.btn-eliminar-icon:hover {
-    background:#c0392b;
-    transform:scale(1.1);
-}
-
-/* INPUT ERROR */
-.input-error {
-    border:2px solid #e74c3c;
-}
-
-.alerta {
-    background:#e74c3c;
-    color:white;
-    padding:10px;
-    border-radius:8px;
-    margin-bottom:10px;
-}
-</style>
 
 </head>
 
@@ -62,14 +25,15 @@ href="${pageContext.request.contextPath}/Contenido/estilos/editarmatricula.css">
 
 <div class="sidebar">
     <h2>Dix Academy</h2>
-    <a href="#">Inicio</a>
-    <a href="${pageContext.request.contextPath}/MatriculaRegistrar">Generar Matrícula</a>
-    <a href="${pageContext.request.contextPath}/MatriculaEditarServlet">Editar Matrícula</a>
-    <a href="#">Renovar Matrícula</a>
-    <a href="#">Cancelar Matrícula</a>
-    <a href="${pageContext.request.contextPath}/MantenimientoApoderado">Apoderados</a>
-    <a href="#">Estudiantes</a>
-    <a href="#">Actividad</a>
+    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
+    <a href="#">MATRICULA</a>
+	<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
+    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
+    <hr>
+    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
+    Cerrar sesión
+</a>
 </div>
 
 <div class="main">

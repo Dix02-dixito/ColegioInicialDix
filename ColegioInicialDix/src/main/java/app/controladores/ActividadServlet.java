@@ -32,6 +32,6 @@ public class ActividadServlet extends HttpServlet {
 
         request.setAttribute("totalActividades", lista.size());
 
-        request.getRequestDispatcher("actividad.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/ActividadSistema/actividad.jsp").forward(request, response);
     }
 }

@@ -1,8 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="app.modelos.Estudiante"%>
+<%@ page import="app.modelos.Usuario"%>
 
 <%
+Usuario u = (Usuario) session.getAttribute("usuario");
+if(u == null){
+    response.sendRedirect("login.jsp");
+    return;
+}
+
 Estudiante est = (Estudiante) request.getAttribute("estudiante");
 List<Estudiante> lista = (List<Estudiante>) request.getAttribute("lista");
 String mensaje = (String) request.getAttribute("mensaje");
@@ -14,15 +21,35 @@ String mensaje = (String) request.getAttribute("mensaje");
 <meta charset="UTF-8">
 <title>Mantenimiento Estudiantes</title>
 
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/Contenido/estilos/estudiante.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/inicio.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/estudiante.css">
+
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Dix Academy</h2>
+
+    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
+    <a href="#">MATRICULA</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
+    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
+
+    <hr>
+    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
+    Cerrar sesión
+</a>
+</div>
+
+<!-- MAIN -->
 <div class="main">
 
-<h2>Mantenimiento de Estudiantes</h2>
+<h2>👨‍🎓 Mantenimiento de Estudiantes</h2>
+<p>Usuario: <b><%= u.getNombre() %></b> | Rol: <%= u.getRol() %></p>
 
 <form action="${pageContext.request.contextPath}/Mantenimiento/Estudiante" method="post">
 
@@ -206,6 +233,10 @@ for(Estudiante e: lista){ %>
 <% } %>
 
 </div>
+
+<footer>
+    Dix Academy Inicial © 2026
+</footer>
 
 <script src="${pageContext.request.contextPath}/Contenido/scripts/estudiante.js"></script>
 

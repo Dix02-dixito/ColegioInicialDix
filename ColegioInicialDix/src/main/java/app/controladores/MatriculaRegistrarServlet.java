@@ -18,7 +18,7 @@ import app.modelos.Matricula;
 import app.data.EstudianteApoderadoDAO;
 import app.modelos.EstudianteApoderado;
 
-@WebServlet("/MatriculaRegistrar")
+@WebServlet("/Matricula/Registrar")
 public class MatriculaRegistrarServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private MatriculaDAO matriculaDAO;
