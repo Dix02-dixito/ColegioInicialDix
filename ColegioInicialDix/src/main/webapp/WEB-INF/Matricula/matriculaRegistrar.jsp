@@ -268,6 +268,46 @@ Swal.fire({
 });
 <% } %>
 
+function validarPDF(){
+
+    let file = document.getElementById("pdfFirmado").files[0];
+
+    if(!file){
+        Swal.fire({
+            icon:'warning',
+            title:'Archivo requerido',
+            text:'Debe seleccionar un PDF firmado'
+        });
+        return;
+    }
+
+    if(file.type !== "application/pdf"){
+        Swal.fire({
+            icon:'error',
+            title:'Archivo inválido',
+            text:'Solo se permite formato PDF'
+        });
+        return;
+    }
+
+    if(file.size > 5 * 1024 * 1024){
+        Swal.fire({
+            icon:'warning',
+            title:'Archivo muy pesado',
+            text:'Máximo 5MB permitido'
+        });
+        return;
+    }
+
+    Swal.fire({
+        icon:'success',
+        title:'PDF cargado correctamente',
+        text:'Documento listo ✔',
+        confirmButtonColor:'#2ecc71'
+    });
+    
+}
+
 
 </script>
 
