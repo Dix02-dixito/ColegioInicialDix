@@ -1,6 +1,7 @@
 package app.controladores;
 
 import java.io.IOException;
+import app.data.ActividadDAO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -34,10 +35,18 @@ public class LoginServlet extends HttpServlet {
 
             HttpSession session = request.getSession();
 
-            // guardas el objeto completo 
+            // guardas el usuario en sesión
             session.setAttribute("usuario", u);
 
-            // SIEMPRE UN SOLO INICIO
+            // 🔥 LOG AQUÍ
+            ActividadDAO dao = new ActividadDAO();
+            dao.registrar(
+            	    u.getId(), 
+            	    "LOGIN",
+            	    "Inició sesión en el sistema"
+            	);
+
+            // redirección
             response.sendRedirect(request.getContextPath() + "/Inicio");
 
         } else {
