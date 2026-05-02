@@ -85,7 +85,7 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
                 return;
             }
 
-            // 🔥 VALIDAR NOMBRES ANTES
+            //  VALIDAR NOMBRES ANTES
             String nombres = request.getParameter("nombres");
             String apellidos = request.getParameter("apellidos");
 
@@ -127,7 +127,7 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
 
             request.setAttribute("mensaje", "Estudiante registrado correctamente");
 
-            // 🔥 LOG
+            //  LOG
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             if (u != null) {
                 new ActividadDAO().registrar(
@@ -147,7 +147,7 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
 
         try {
 
-            // 🔥 VALIDAR ANTES
+            //  VALIDAR ANTES
             String nombres = request.getParameter("nombres");
             String apellidos = request.getParameter("apellidos");
 
@@ -177,7 +177,7 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
 
             request.setAttribute("estudiante", e);
 
-            // 🔥 LOG
+            //  LOG
             if (ok) {
                 Usuario u = (Usuario) request.getSession().getAttribute("usuario");
 
@@ -220,7 +220,7 @@ public class MantenimientoEstudianteServlet extends HttpServlet {
                     ok ? "Estudiante eliminado"
                        : "No se pudo eliminar");
 
-            // 🔥 LOG
+            // LOG
             if (ok) {
                 Usuario u = (Usuario) request.getSession().getAttribute("usuario");
 

@@ -47,10 +47,12 @@ href="${pageContext.request.contextPath}/Contenido/estilos/apoderado.css">
 <div class="row">
     <div class="col">
         <label>DNI</label>
-        <input type="text" id="dniEstudiante"
-               name="txtDniEstudiante"
-               maxlength="8"
-               required>
+
+        <!-- 🔥 INPUT QUE FALTABA -->
+        <input type="text" id="dniEstudiante">
+
+        <!-- 🔥 HIDDEN (EL QUE SE ENVÍA AL SERVLET) -->
+        <input type="hidden" id="dniHidden" name="txtDniEstudiante">
     </div>
 
     <div class="col">
@@ -195,11 +197,8 @@ function buscar() {
     .then(res => res.json())
     .then(data => {
 
-        console.log("DATA:", data);
-
         if(!data || !data.dni){
             estudianteCargado = false;
-
             Swal.fire({
                 icon:'error',
                 title:'No encontrado',
@@ -210,30 +209,14 @@ function buscar() {
 
         estudianteCargado = true;
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Estudiante encontrado',
-            text: data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno,
-            timer: 1500,
-            showConfirmButton: false
-        });
+        // 🔥 FIX CLAVE
+        document.getElementById("dniHidden").value = data.dni;
 
-        // ESTUDIANTE
         document.getElementById("nomEst").value = data.nombres;
         document.getElementById("apellidoPaterno").value = data.apellidoPaterno;
         document.getElementById("apellidoMaterno").value = data.apellidoMaterno;
         document.getElementById("fechaEst").value = formatearFecha(data.fecha);
         document.getElementById("sexoEst").value = mostrarSexo(data.sexo);
-
-        // APODERADO
-        if(!data.dniApoderado){
-            Swal.fire({
-                icon:'warning',
-                title:'Sin apoderado',
-                text:'El estudiante no tiene apoderado registrado'
-            });
-            return;
-        }
 
         document.getElementById("nomApo").value = data.nombreApoderado;
         document.getElementById("dniApo").value = data.dniApoderado;
@@ -242,55 +225,7 @@ function buscar() {
         document.getElementById("correoApo").value = data.correo;
         document.getElementById("dirApo").value = data.direccion;
 
-    })
-    .catch(err => {
-        console.error("ERROR:", err);
-        Swal.fire({
-            icon:'error',
-            title:'Error',
-            text:'No se pudo conectar con el servidor'
-        });
     });
-}
-
-/* VALIDAR PDF */
-function validarPDF(){
-
-    let file = document.getElementById("pdfFirmado").files[0];
-
-    if(!file){
-        Swal.fire({
-            icon:'warning',
-            title:'Archivo requerido',
-            text:'Debe seleccionar un PDF firmado'
-        });
-        return;
-    }
-
-    if(file.type !== "application/pdf"){
-        Swal.fire({
-            icon:'error',
-            title:'Archivo inválido',
-            text:'Solo se permite PDF'
-        });
-        return;
-    }
-
-    if(file.size > 5 * 1024 * 1024){
-        Swal.fire({
-            icon:'warning',
-            title:'Archivo muy pesado',
-            text:'Máximo 5MB permitido'
-        });
-        return;
-    }
-
-    Swal.fire({
-        icon:'success',
-        title:'PDF cargado correctamente',
-        text:'Documento listo ✔'
-    });
-
 }
 
 /* ALERTAS JSP */
