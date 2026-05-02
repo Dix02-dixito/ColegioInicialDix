@@ -48,10 +48,10 @@ href="${pageContext.request.contextPath}/Contenido/estilos/apoderado.css">
     <div class="col">
         <label>DNI</label>
 
-        <!-- 🔥 INPUT QUE FALTABA -->
+        
         <input type="text" id="dniEstudiante">
 
-        <!-- 🔥 HIDDEN (EL QUE SE ENVÍA AL SERVLET) -->
+      
         <input type="hidden" id="dniHidden" name="txtDniEstudiante">
     </div>
 
