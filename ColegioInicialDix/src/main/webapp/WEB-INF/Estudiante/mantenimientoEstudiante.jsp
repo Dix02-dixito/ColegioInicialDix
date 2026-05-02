@@ -22,9 +22,10 @@ String mensaje = (String) request.getAttribute("mensaje");
 <title>Mantenimiento Estudiantes</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/inicio.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/estudiante.css">
- <link rel="stylesheet" href="Contenido/estilos/global-colores.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/inicio.css">
 
 </head>
 
@@ -32,19 +33,34 @@ String mensaje = (String) request.getAttribute("mensaje");
 
 <!-- SIDEBAR -->
 <div class="sidebar">
+
     <h2>Dix Academy</h2>
-
-    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="${pageContext.request.contextPath}/MatriculaRegistrar">GENERAR MATRICULA</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
-    <a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
-    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
-
-    <hr>
-    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
-    Cerrar sesión
+    <a href="${pageContext.request.contextPath}/Inicio">
+    <i class="bi bi-house-door-fill"></i> INICIO
 </a>
+
+<a href="${pageContext.request.contextPath}/Registrar/Matricula">
+    <i class="bi bi-journal-text"></i> REGISTRAR MATRÍCULA
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">
+    <i class="bi bi-people-fill"></i> MANTENIMIENTO APODERADO
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">
+    <i class="bi bi-person-badge-fill"></i> MANTENIMIENTO ESTUDIANTE
+</a>
+<a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">
+    <i class="bi bi-journal-text"></i> MANTENIMIENTO MATRÍCULA
+</a>
+<a href="${pageContext.request.contextPath}/actividad">
+    <i class="bi bi-activity"></i> ACTIVIDAD GENERAL
+</a>
+
+<a href="${pageContext.request.contextPath}/Logout" style="color:#f87171;">
+    <i class="bi bi-box-arrow-right"></i> CERRAR SESIÓN
+</a>
+    
 </div>
 
 <!-- MAIN -->

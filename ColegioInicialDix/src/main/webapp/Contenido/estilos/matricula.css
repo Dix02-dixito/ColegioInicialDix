@@ -1,131 +1,243 @@
-body{
-    font-family: Arial;
-    background:#f4f6f8;
+@charset "UTF-8";
+
+/* ================= BASE ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins','Segoe UI',sans-serif;
 }
-/* MENU */
+
+body{
+  min-height:100vh;
+  display:flex;
+
+  background: radial-gradient(circle at top,#eef6ff,#f4f8ff);
+  color:#1e293b;
+}
+
+/* ================= SIDEBAR ================= */
 .sidebar{
-width:220px;
-height:100vh;
-background:#4a90e2;
-color:white;
-position:fixed;
-padding:20px;
+  width:240px;
+  height:100vh;
+  position:fixed;
+
+  background: linear-gradient(180deg,#0f172a,#1e293b);
+  padding:25px;
+
+  box-shadow:5px 0 25px rgba(0,0,0,0.15);
 }
 
 .sidebar h2{
-margin-bottom:30px;
-text-align:center;
+  font-size:24px;
+  margin-bottom:30px;
+
+  background: linear-gradient(135deg,#38bdf8,#60a5fa);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .sidebar a{
-display:block;
-text-decoration:none;
-color:white;
-padding:12px;
-background:#6bb6ff;
-margin-bottom:8px;
-border-radius:6px;
-transition:0.3s;
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  padding:10px;
+  margin:8px 0;
+
+  border-radius:10px;
+  text-decoration:none;
+
+  color:#cbd5e1;
+  transition:.25s;
 }
 
 .sidebar a:hover{
-background:#89c8ff;
+  background: linear-gradient(135deg,#2563eb,#38bdf8);
+  color:white;
+  transform:translateX(6px);
 }
 
-.container{
-    width:70%;
-    margin:auto;
+/* ================= MAIN CENTRADO ================= */
+.main{
+  margin-left:240px;
+  width:100%;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  padding:35px;
+  gap:22px;
 }
 
-h2{
-    text-align:center;
+/* contenido centrado tipo dashboard */
+.main > *{
+  width:100%;
+  max-width:950px;
 }
 
-/* cards */
+/* ================= TITULO ================= */
+.title{
+  font-size:26px;
+  font-weight:700;
+  color:#2563eb;
+  text-align:center;
+}
+
+/* ================= ALERTA ================= */
+.alert{
+  background:#ecfeff;
+  border:1px solid #bae6fd;
+
+  color:#0369a1;
+  padding:12px;
+
+  border-radius:12px;
+}
+
+/* ================= CARD (EFECTO PREMIUM) ================= */
 .card{
-    background:white;
-    padding:20px;
-    margin-bottom:15px;
-    border-radius:10px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    animation:fadeIn 0.4s ease;
+  position:relative;
+
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+
+  padding:22px;
+  border-radius:20px;
+
+  box-shadow:0 18px 45px rgba(0,0,0,0.12);
+
+  overflow:hidden;
+  transition:.3s;
 }
 
-/* inputs */
-input, select{
-    width:100%;
-    padding:8px;
-    margin-top:8px;
-    margin-bottom:10px;
-    border-radius:6px;
-    border:1px solid #ccc;
+/* 🔥 MARCO DEGRADADO MÁS VIVO */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:20px;
+  padding:2px;
+
+  background: linear-gradient(
+    135deg,
+    #38bdf8,
+    #2563eb,
+    #7c3aed,
+    #38bdf8
+  );
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  opacity:0.45;
+  pointer-events:none;
 }
 
-/* botones */
-button{
-    padding:8px 12px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    transition:0.2s;
+/* hover con vida */
+.card:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 25px 60px rgba(0,0,0,0.18);
 }
 
-button:hover{
-    transform:scale(1.05);
+/* ================= FORM ================= */
+form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
 
-/* colores */
+label{
+  font-size:13px;
+  color:#64748b;
+}
+
+/* ================= INPUTS ================= */
+input, select, textarea{
+  padding:12px;
+  border-radius:12px;
+
+  border:1px solid #dbeafe;
+  background:#f8fbff;
+
+  outline:none;
+  transition:.2s;
+}
+
+input:focus, select:focus, textarea:focus{
+  border-color:#38bdf8;
+  box-shadow:0 0 0 4px rgba(56,189,248,0.25);
+  background:white;
+}
+
+/* ================= BOTONES ================= */
 .btn{
-    background:#3498db;
-    color:white;
+  padding:10px 18px;
+  border:none;
+  border-radius:12px;
+
+  background: linear-gradient(135deg,#2563eb,#38bdf8);
+  color:white;
+
+  cursor:pointer;
+  font-weight:600;
+
+  transition:.25s;
 }
 
-.btn-danger{
-    background:#e74c3c;
-    color:white;
+.btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 30px rgba(37,99,235,0.4);
 }
 
-.btn-warning{
-    background:#f39c12;
-    color:white;
-}
-
-/* tabla */
+/* ================= TABLA ================= */
 table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  border-radius:12px;
+  overflow:hidden;
 }
 
 th{
-    background:#3498db;
-    color:white;
-    padding:10px;
+  background: linear-gradient(135deg,#2563eb,#38bdf8);
+  color:white;
+  padding:12px;
 }
 
 td{
-    padding:8px;
-    text-align:center;
+  padding:12px;
+  border-bottom:1px solid #e5eaf3;
+}
+
+tr{
+  background:white;
+  transition:.2s;
 }
 
 tr:hover{
-    background:#ecf0f1;
-    cursor:pointer;
+  background:rgba(56,189,248,0.08);
+  transform:scale(1.01);
 }
 
-/* alerta */
-.alert{
-    background:#2ecc71;
-    color:white;
-    padding:12px;
-    border-radius:6px;
-    text-align:center;
-    margin-bottom:10px;
-    animation:fadeIn 0.5s ease;
+/* ================= EFECTO SECCIONES ================= */
+.card + .card{
+  margin-top:5px;
 }
 
-/* animacion */
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(10px);}
-    to{opacity:1; transform:translateY(0);}
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .main{
+    margin-left:0;
+    padding:20px;
+  }
+
+  .main > *{
+    max-width:100%;
+  }
 }

@@ -27,15 +27,15 @@ public class EstudianteDAO implements IEstudiante {
 
         try {
 
-            PreparedStatement ps = cn.prepareStatement(
-                "SELECT * FROM estudiante WHERE dni = ?"
-            );
+            CallableStatement cs =
+                cn.prepareCall("{CALL sp_buscar_estudiante_relacion(?)}");
 
-            ps.setString(1, dni);
+            cs.setString(1, dni);
 
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = cs.executeQuery();
 
             if (rs.next()) {
+
                 e = new Estudiante();
 
                 e.setIdEstudiante(rs.getInt("id_estudiante"));
@@ -44,6 +44,10 @@ public class EstudianteDAO implements IEstudiante {
                 e.setApellidos(rs.getString("apellidos"));
                 e.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
                 e.setSexo(rs.getString("sexo"));
+
+                // 🔥 ESTO TE FALTABA
+                e.setNombreApoderado(rs.getString("nombre_apoderado"));
+                e.setRelacion(rs.getString("relacion"));
             }
 
         } catch (Exception ex) {

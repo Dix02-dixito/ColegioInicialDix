@@ -12,7 +12,7 @@ import app.data.ActividadDAO;
 import app.modelos.Apoderado;
 import app.modelos.Usuario;  
 
-@WebServlet("/MantenimientoApoderado")
+@WebServlet("/Mantenimiento/Apoderado")
 public class MantenimientoApoderadoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class MantenimientoApoderadoServlet extends HttpServlet {
                 }
 
                 request.setAttribute("lista", dao.listarApoderado());
-                request.getRequestDispatcher("WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
+                request.getRequestDispatcher("/WEB-INF/MantenimientoApoderado/mantenimientoApoderado.jsp")
                        .forward(request, response);
                 break;
 

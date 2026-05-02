@@ -20,7 +20,7 @@ import app.modelos.EstudianteApoderado;
 
 
 
-@WebServlet("/MatriculaRegistrar")
+@WebServlet("/Registrar/Matricula")
 public class MatriculaRegistrarServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private MatriculaDAO matriculaDAO;
@@ -37,7 +37,7 @@ public class MatriculaRegistrarServlet extends HttpServlet {
  protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.getRequestDispatcher("WEB-INF/Matricula/matriculaRegistrar.jsp")
+        request.getRequestDispatcher("/WEB-INF/Matricula/matriculaRegistrar.jsp")
                .forward(request, response);
     }
 
@@ -65,6 +65,7 @@ if (estudiante == null) {
 } else if (apoderado == null) {
     mensaje = "El apoderado no existe";
 } else if (matriculaDAO.existeMatriculaActiva(estudiante.getIdEstudiante())) {
+    ok = false;
     mensaje = "El estudiante ya tiene matrícula activa";
 } else {
 	 // generar matricula
@@ -99,14 +100,14 @@ if (estudiante == null) {
         request.setAttribute("idG", m.getIdMatricula());
 
     } else {
-        mensaje = "Error al registrar matrícula";
+        mensaje = "El estudiante ya cuenta con una matricula Activa";
     }
 }
         request.setAttribute("ok", ok);
         request.setAttribute("mensaje", mensaje);
         request.setAttribute("dniEstudiante", dniEstudiante);
         request.setAttribute("dniApoderado", dniApoderado);
-        request.getRequestDispatcher("WEB-INF/Matricula/matriculaRegistrar.jsp")
+        request.getRequestDispatcher("/WEB-INF/Matricula/matriculaRegistrar.jsp")
                        .forward(request, response);
          
     }

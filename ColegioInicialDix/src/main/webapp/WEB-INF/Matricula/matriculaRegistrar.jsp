@@ -6,6 +6,8 @@ String mensaje = (String) request.getAttribute("mensaje");
 Object idG = request.getAttribute("idG");
 %>
 
+<%@ page import="java.text.SimpleDateFormat" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,22 +15,47 @@ Object idG = request.getAttribute("idG");
 <title>Registrar Matrícula</title>
 
 <link rel="stylesheet"
-href="${pageContext.request.contextPath}/Contenido/estilos/apoderado.css">
+href="${pageContext.request.contextPath}/Contenido/estilos/Registrar.css">
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/inicio.css">
 
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
+
     <h2>Dix Academy</h2>
-    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="${pageContext.request.contextPath}/MatriculaRegistrar">GENERAR MATRICULA</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
-    <a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
-    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
+    <a href="${pageContext.request.contextPath}/Inicio">
+    <i class="bi bi-house-door-fill"></i> INICIO
+</a>
+
+<a href="${pageContext.request.contextPath}/Registrar/Matricula">
+    <i class="bi bi-journal-text"></i> REGISTRAR MATRÍCULA
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">
+    <i class="bi bi-people-fill"></i> MANTENIMIENTO APODERADO
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">
+    <i class="bi bi-person-badge-fill"></i> MANTENIMIENTO ESTUDIANTE
+</a>
+<a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">
+    <i class="bi bi-journal-text"></i> MANTENIMIENTO MATRÍCULA
+</a>
+<a href="${pageContext.request.contextPath}/actividad">
+    <i class="bi bi-activity"></i> ACTIVIDAD GENERAL
+</a>
+
+<a href="${pageContext.request.contextPath}/Logout" style="color:#f87171;">
+    <i class="bi bi-box-arrow-right"></i> CERRAR SESIÓN
+</a>
+    
 </div>
 
 <div class="main">
@@ -242,6 +269,7 @@ Swal.fire({
     text: '<%= mensaje %>'
 });
 <% } %>
+
 
 </script>
 

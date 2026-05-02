@@ -285,7 +285,8 @@ public class MatriculaDAO implements IMatricula {
         }
 
     } catch (Exception e) {
-        throw new RuntimeException("Error al generar matrícula: " + e.getMessage());
+    	e.printStackTrace();
+    	return false;
     	    }
 
     	    return false;

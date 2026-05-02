@@ -16,37 +16,53 @@ String mensaje = (String) request.getAttribute("mensaje");
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Mantenimiento Matricula</title>
+<title>Mantenimiento Matrícula</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/inicio.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/matricula.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 
-<!-- CSS -->
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/Contenido/estilos/matricula.css">
-<link rel="stylesheet" href="Contenido/estilos/global-colores.css">
-
-<!-- JS -->
-<script src="${pageContext.request.contextPath}/Contenido/scripts/matricula.js"></script>
 
 </head>
 
-
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
+
     <h2>Dix Academy</h2>
-    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
-	<a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
-    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
-    <hr>
-    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
-    Cerrar sesión
+    <a href="${pageContext.request.contextPath}/Inicio">
+    <i class="bi bi-house-door-fill"></i> INICIO
 </a>
+
+<a href="${pageContext.request.contextPath}/Registrar/Matricula">
+    <i class="bi bi-journal-text"></i> REGISTRAR MATRÍCULA
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">
+    <i class="bi bi-people-fill"></i> MANTENIMIENTO APODERADO
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">
+    <i class="bi bi-person-badge-fill"></i> MANTENIMIENTO ESTUDIANTE
+</a>
+<a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">
+    <i class="bi bi-journal-text"></i> MANTENIMIENTO MATRÍCULA
+</a>
+<a href="${pageContext.request.contextPath}/actividad">
+    <i class="bi bi-activity"></i> ACTIVIDAD GENERAL
+</a>
+
+<a href="${pageContext.request.contextPath}/Logout" style="color:#f87171;">
+    <i class="bi bi-box-arrow-right"></i> CERRAR SESIÓN
+</a>
+    
 </div>
 
-<div class="container">
+<!-- MAIN -->
+<div class="main">
 
-<h2>Mantenimiento Matricula</h2>
+<h2 class="title">Mantenimiento Matrícula</h2>
 
 <!-- ALERTA -->
 <% if(mensaje!=null){ %>
@@ -54,7 +70,8 @@ href="${pageContext.request.contextPath}/Contenido/estilos/matricula.css">
 <% } %>
 
 <!-- BUSCAR -->
-<div class="card">
+<div class="card hover">
+
 <form method="post">
 
 <input name="dni" placeholder="Ingrese DNI"
@@ -65,123 +82,78 @@ Buscar
 </button>
 
 </form>
+
 </div>
 
-<!-- ESTUDIANTE -->
-<div class="card">
-<b>Estudiante:</b><br>
+<!-- INFO ESTUDIANTE -->
+<div class="card soft">
+
+<b>Estudiante:</b>
 <%= est!=null ? est.getNombres()+" "+est.getApellidos() : "-" %>
-</div>
-
-<!-- DATOS ACTUALES -->
-<div class="card">
-
-<b>Apoderado actual:</b>
-<%= mat!=null ? mat.getNombreApoderado() : "-" %><br>
-
-<b>Relacion:</b>
-<%= mat!=null ? mat.getRelacion() : "-" %><br>
-
-<b>Nivel:</b>
-<%= mat!=null ? mat.getNombreNivel() : "-" %>
 
 </div>
 
-<!-- FORM EDITAR -->
+<!-- INFO MATRICULA -->
+<div class="card soft">
+
+<p><b>Apoderado:</b> <%= mat!=null ? mat.getNombreApoderado() : "-" %></p>
+<p><b>Relación:</b> <%= mat!=null ? mat.getRelacion() : "-" %></p>
+<p><b>Nivel:</b> <%= mat!=null ? mat.getNombreNivel() : "-" %></p>
+
+</div>
+
+<!-- FORM -->
 <div class="card">
 
 <form method="post">
 
-<input type="hidden" id="idMatricula" name="idMatricula"
+<input type="hidden" name="idMatricula"
 value="<%=mat!=null?mat.getIdMatricula():""%>">
 
-<!-- APODERADO -->
 <label>Apoderado</label>
-<select name="idApoderado" id="idApoderado">
+<select name="idApoderado">
 
 <option value="">Seleccione</option>
 
 <%
 if(apoderados!=null){
 for(String[] a:apoderados){
-
-String selected = "";
-if(mat!=null && String.valueOf(mat.getIdApoderado()).equals(a[0])){
-    selected = "selected";
-}
+String sel = (mat!=null && String.valueOf(mat.getIdApoderado()).equals(a[0]))?"selected":"";
 %>
-
-<option value="<%=a[0]%>" <%=selected%>>
-<%=a[1]%> - <%=a[2]%>
-</option>
-
-<%
-}}
-%>
+<option value="<%=a[0]%>" <%=sel%>><%=a[1]%> - <%=a[2]%></option>
+<% }} %>
 
 </select>
 
-<!-- NIVEL -->
 <label>Nivel</label>
-<select name="idNivel" id="idNivel">
+<select name="idNivel">
 
 <option value="">Seleccione</option>
 
 <%
 if(niveles!=null){
 for(String[] n:niveles){
-
-String selected = "";
-if(mat!=null && String.valueOf(mat.getIdNivel()).equals(n[0])){
-    selected = "selected";
-}
+String sel = (mat!=null && String.valueOf(mat.getIdNivel()).equals(n[0]))?"selected":"";
 %>
-
-<option value="<%=n[0]%>" <%=selected%>>
-<%=n[1]%>
-</option>
-
-<%
-}}
-%>
+<option value="<%=n[0]%>" <%=sel%>><%=n[1]%></option>
+<% }} %>
 
 </select>
 
-<!-- OBS -->
-<label>Observacion</label>
-<input name="observacion" id="observacion"
+<label>Observación</label>
+<input name="observacion"
 value="<%=mat!=null?mat.getObservacion():""%>">
 
-<!-- ESTADO -->
 <label>Estado</label>
-<select name="estado" id="estado">
+<select name="estado">
 
-<option <%=mat!=null && "ACTIVO".equals(mat.getEstado())?"selected":""%>>
-ACTIVO
-</option>
-
-<option <%=mat!=null && "INACTIVO".equals(mat.getEstado())?"selected":""%>>
-INACTIVO
-</option>
-
+<option <%=mat!=null && "ACTIVO".equals(mat.getEstado())?"selected":""%>>ACTIVO</option>
+<option <%=mat!=null && "INACTIVO".equals(mat.getEstado())?"selected":""%>>INACTIVO</option>
 
 </select>
 
-<!-- BOTONES -->
 <button name="accion" value="editar" class="btn">
 Actualizar
-</button>
-
-<button name="accion" value="inactivar"
-onclick="return confirmar('inactivar')"
-class="btn-warning">
-Inactivar
-</button>
-
-<button name="accion" value="cancelar"
-onclick="return confirmar('cancelar')"
-class="btn-danger">
-Cancelar
 </button>
 
 </form>
@@ -189,7 +161,7 @@ Cancelar
 </div>
 
 <!-- TABLA -->
-<div class="card">
+<div class="card table-card">
 
 <table>
 
@@ -212,11 +184,10 @@ for(Matricula m:lista){
 '<%=m.getIdNivel()%>',
 '<%=m.getIdApoderado()%>',
 '<%=m.getEstado()%>',
-'<%=m.getObservacion()%>'
-)">
+'<%=m.getObservacion()%>')">
 
 <td><%=m.getIdMatricula()%></td>
-<td><%=m.getNombresEstudiante()%> <%=m.getApellidosEstudiante()%></td>
+<td><%=m.getNombresEstudiante()%></td>
 <td><%=m.getNombreApoderado()%></td>
 <td><%=m.getRelacion()%></td>
 <td><%=m.getNombreNivel()%></td>
@@ -224,9 +195,7 @@ for(Matricula m:lista){
 
 </tr>
 
-<%
-}}
-%>
+<% }} %>
 
 </table>
 

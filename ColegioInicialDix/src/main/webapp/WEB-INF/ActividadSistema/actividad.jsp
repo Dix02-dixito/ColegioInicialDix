@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.*" %>
 <%@ page import="app.modelos.Usuario" %>
 <%@ page import="app.modelos.Actividad" %>
 
@@ -11,14 +10,9 @@
         return;
     }
 
-    //LISTA QUE VIENE DEL SERVLET
     List<Actividad> lista = (List<Actividad>) request.getAttribute("listaActividad");
+    if (lista == null) lista = new ArrayList<>();
 
-    if (lista == null) {
-        lista = new ArrayList<>();
-    }
-
-    // 🔥 seguro contra null del atributo
     Integer totalAct = (Integer) request.getAttribute("totalActividades");
     int totalActividades = (totalAct != null) ? totalAct : 0;
 
@@ -34,99 +28,132 @@
     <title>Actividades</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="Contenido/estilos/actividad.css">
-    <link rel="stylesheet" href="Contenido/estilos/global-colores.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="Contenido/estilos/inicio.css">
+     <link rel="stylesheet" href="Contenido/estilos/actividad.css">
+
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
+
     <h2>Dix Academy</h2>
-    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
-	<a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
-    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
-    <hr>
-    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
-    Cerrar sesión
+    <a href="${pageContext.request.contextPath}/Inicio">
+    <i class="bi bi-house-door-fill"></i> INICIO
 </a>
+
+<a href="${pageContext.request.contextPath}//Registrar/Matricula">
+    <i class="bi bi-journal-text"></i> REGISTRAR MATRÍCULA
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">
+    <i class="bi bi-people-fill"></i> MANTENIMIENTO APODERADO
+</a>
+
+<a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">
+    <i class="bi bi-person-badge-fill"></i> MANTENIMIENTO ESTUDIANTE
+</a>
+<a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">
+    <i class="bi bi-journal-text"></i> MANTENIMIENTO MATRÍCULA
+</a>
+<a href="${pageContext.request.contextPath}/actividad">
+    <i class="bi bi-activity"></i> ACTIVIDAD GENERAL
+</a>
+
+<a href="${pageContext.request.contextPath}/Logout" style="color:#f87171;">
+    <i class="bi bi-box-arrow-right"></i> CERRAR SESIÓN
+</a>
+    
 </div>
 
+
+<!-- MAIN -->
 <div class="main">
 
-    <h2>📊 Panel General</h2>
-    <p>Bienvenido <b><%= u.getNombre() %></b></p>
-
-    <!-- KPI CARDS -->
+    <h2 class="titulo">Panel de Actividad</h2>
+    <p class="rol">Bienvenido <b><%= u.getNombre() %></b></p>
+    <!-- KPI -->
     <div class="kpi-grid">
 
         <div class="kpi">
             <h3><%= totalEstudiantes %></h3>
-            <p>👨‍🎓 Estudiantes</p>
+            <p>Estudiantes</p>
         </div>
 
         <div class="kpi">
             <h3><%= matriculasActivas %></h3>
-            <p>✅ Matrículas Activas</p>
+            <p>Activas</p>
         </div>
 
         <div class="kpi">
             <h3><%= matriculasInactivas %></h3>
-            <p>⏸️ Inactivas</p>
+            <p>Inactivas</p>
         </div>
 
         <div class="kpi">
             <h3><%= matriculasCanceladas %></h3>
-            <p>❌ Canceladas</p>
+            <p>Canceladas</p>
         </div>
 
-        <div class="kpi">
-            <h3><%= totalActividades %></h3>
-            <p>📌 Actividades</p>
-        </div>
-
+        <div class="kpi total">
+   	 <h3><%= totalActividades %></h3>
+    	<p>Total Actividades</p>
+	</div>
+        
     </div>
 
-    <!-- ACTIVIDAD -->
-    <div class="tabla-container mt-4">
+    <!-- ACTIVIDAD (TARJETAS PRO) -->
+<div class="tabla-container">
 
-        <h4>📋 Actividad reciente</h4>
+    <h4>Actividad reciente</h4>
 
-        <table class="tabla-actividad">
-            <tbody>
+    <div class="tabla-actividad">
 
-            <%
-                if (!lista.isEmpty()) {
-                    for (Actividad act : lista) {
-            %>
+    <%
+        for (Actividad act : lista) {
+    %>
 
-                <tr>
-                    <td class="usuario"><%= act.getUsuario() %></td>
+        <div class="fila">
 
-                    <td>
-                        <span class="accion"><%= act.getAccion() %></span>
-                        <br>
-                        <span class="detalle"><%= act.getDetalle() %></span>
-                    </td>
+            <!-- USUARIO -->
+            <div class="col usuario">
+                <i class="bi bi-person-circle"></i>
+                <span><%= act.getUsuario() %></span>
+            </div>
 
-                    <td class="fecha">
-                        <%= act.getFecha() %><br>
-                        <small><%= act.getHora() %></small>
-                    </td>
-                </tr>
+            <!-- ACCION -->
+            <div class="col accion-box">
+                <div class="accion">
+                    <i class="bi bi-lightning-charge"></i>
+                    <span><%= act.getAccion() %></span>
+                </div>
 
-            <%
-                    }
-                }
-            %>
+                <div class="detalle">
+                    <%= act.getDetalle() %>
+                </div>
+            </div>
 
-            </tbody>
-        </table>
+            <!-- FECHA -->
+            <div class="col fecha">
+                <span><%= act.getFecha() %></span>
+                <small><%= act.getHora() %></small>
+            </div>
+
+        </div>
+
+    <%
+        }
+    %>
 
     </div>
 
 </div>
+    
 
 <footer>
     Dix Academy Inicial © 2026
@@ -134,3 +161,4 @@
 
 </body>
 </html>
+
