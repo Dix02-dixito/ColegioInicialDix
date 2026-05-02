@@ -103,7 +103,7 @@
     <div class="acciones mt-4">
 
         <a href="${pageContext.request.contextPath}/MatriculaRegistrar" class="btn-accion">➕ Nueva Matrícula</a>
-        <a href="${pageContext.request.contextPath}/MatriculaEditarServlet" class="btn-accion">✏️ Editar</a>
+        <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula" class="btn-accion">✏️ Editar Matricula</a>
         <a href="${pageContext.request.contextPath}/actividad" class="btn-accion">📊 Ver Actividad</a>
 
     </div>
