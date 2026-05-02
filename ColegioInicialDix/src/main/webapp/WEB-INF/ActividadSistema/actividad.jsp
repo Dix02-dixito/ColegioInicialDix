@@ -35,6 +35,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="Contenido/estilos/actividad.css">
+    <link rel="stylesheet" href="Contenido/estilos/global-colores.css">
 </head>
 
 <body>
@@ -42,8 +43,8 @@
 <div class="sidebar">
     <h2>Dix Academy</h2>
     <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="#">MATRICULA</a>
-	<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
+	<a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
     <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
     <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
     <hr>

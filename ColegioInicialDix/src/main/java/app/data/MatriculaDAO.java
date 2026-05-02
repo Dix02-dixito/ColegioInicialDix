@@ -1,6 +1,7 @@
 package app.data;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -199,4 +200,43 @@ public class MatriculaDAO implements IMatricula {
 
         return false;
     }
+    public Matricula buscarPorDniEstudiante(String dni) {
+
+        Matricula m = null;
+
+        String sql = "SELECT a.dni AS dni_apoderado, " +
+         "a.nombres, a.apellidos, " +
+         "a.telefono, a.correo, a.direccion, " +
+         "ea.relacion " +
+         "FROM estudiante e " +
+         "INNER JOIN estudiante_apoderado ea ON e.id_estudiante = ea.id_estudiante " +
+         "INNER JOIN apoderado a ON ea.id_apoderado = a.id_apoderado " +
+         "WHERE e.dni = ?";
+
+    try (Connection con = MySQLConexion.obtenerConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, dni);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            m = new Matricula();
+
+            m.setDniApoderado(rs.getString("dni_apoderado"));
+    m.setNombreApoderado(rs.getString("nombres") + " " + rs.getString("apellidos"));
+    m.setRelacion(rs.getString("relacion"));
+    m.setTelefonoApoderado(rs.getString("telefono"));
+    m.setCorreoApoderado(rs.getString("correo"));
+    m.setDireccionApoderado(rs.getString("direccion"));
+               
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return m;
+    }
+
 }

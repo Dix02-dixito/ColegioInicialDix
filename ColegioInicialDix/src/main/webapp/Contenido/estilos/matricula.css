@@ -2,6 +2,35 @@ body{
     font-family: Arial;
     background:#f4f6f8;
 }
+/* MENU */
+.sidebar{
+width:220px;
+height:100vh;
+background:#4a90e2;
+color:white;
+position:fixed;
+padding:20px;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+text-align:center;
+}
+
+.sidebar a{
+display:block;
+text-decoration:none;
+color:white;
+padding:12px;
+background:#6bb6ff;
+margin-bottom:8px;
+border-radius:6px;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:#89c8ff;
+}
 
 .container{
     width:70%;

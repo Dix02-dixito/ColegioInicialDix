@@ -24,6 +24,7 @@ String mensaje = (String) request.getAttribute("mensaje");
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/inicio.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/Contenido/estilos/estudiante.css">
+ <link rel="stylesheet" href="Contenido/estilos/global-colores.css">
 
 </head>
 
@@ -34,8 +35,8 @@ String mensaje = (String) request.getAttribute("mensaje");
     <h2>Dix Academy</h2>
 
     <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="#">MATRICULA</a>
-    <a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
+    <a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
     <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
     <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
 

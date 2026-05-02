@@ -21,13 +21,28 @@ String mensaje = (String) request.getAttribute("mensaje");
 <!-- CSS -->
 <link rel="stylesheet"
 href="${pageContext.request.contextPath}/Contenido/estilos/matricula.css">
+<link rel="stylesheet" href="Contenido/estilos/global-colores.css">
 
 <!-- JS -->
 <script src="${pageContext.request.contextPath}/Contenido/scripts/matricula.js"></script>
 
 </head>
 
+
 <body>
+
+<div class="sidebar">
+    <h2>Dix Academy</h2>
+    <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
+	<a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
+    <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
+    <hr>
+    <a href="${pageContext.request.contextPath}/Logout" style="color:red;">
+    Cerrar sesión
+</a>
+</div>
 
 <div class="container">
 
