@@ -49,24 +49,37 @@ if (e != null) {
 	java.sql.Date fechaNacimiento = e.getFechaNacimiento();
 
 	String fechaFormateada = "";
+	String apellidoPaterno = "";
+	String apellidoMaterno = "";
+
+	if (e.getApellidos() != null) {
+	    String[] partes = e.getApellidos().split(" ", 2);
+
+	    apellidoPaterno = partes[0];
+
+	    if (partes.length > 1) {
+	        apellidoMaterno = partes[1];
+	    }
+	}
 
 	if (fechaNacimiento != null) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		fechaFormateada = sdf.format(e.getFechaNacimiento());
 	}
 	out.print("{"
-	    + "\"dni\":\"" + e.getDni() + "\","
-	    + "\"nombres\":\"" + e.getNombres() + "\","
-	    + "\"apellidos\":\"" + e.getApellidos() + "\","
-	    + "\"fecha\":\"" + fechaFormateada + "\","
-	    + "\"sexo\":\"" + e.getSexo() + "\","
-	    + "\"nombreApoderado\":\"" + nombreApo + "\","
-	    + "\"dniApoderado\":\"" + dniApo + "\","
-	    + "\"relacion\":\"" + relacion + "\","
-	    + "\"telefono\":\"" + (m != null ? m.getTelefonoApoderado() : "") + "\","
-	    + "\"correo\":\"" + (m != null ? m.getCorreoApoderado() : "") + "\","
-	    + "\"direccion\":\"" + (m != null ? m.getDireccionApoderado() : "") + "\""
-	    + "}"); } 
+		    + "\"dni\":\"" + e.getDni() + "\","
+		    + "\"nombres\":\"" + e.getNombres() + "\","
+		    + "\"apellidoPaterno\":\"" + apellidoPaterno + "\","
+		    + "\"apellidoMaterno\":\"" + apellidoMaterno + "\","
+		    + "\"fecha\":\"" + fechaFormateada + "\","
+		    + "\"sexo\":\"" + e.getSexo() + "\","
+		    + "\"nombreApoderado\":\"" + nombreApo + "\","
+		    + "\"dniApoderado\":\"" + dniApo + "\","
+		    + "\"relacion\":\"" + relacion + "\","
+		    + "\"telefono\":\"" + (m != null ? m.getTelefonoApoderado() : "") + "\","
+		    + "\"correo\":\"" + (m != null ? m.getCorreoApoderado() : "") + "\","
+		    + "\"direccion\":\"" + (m != null ? m.getDireccionApoderado() : "") + "\""
+		+ "}"); }
 else {
     out.print("{}");
         }

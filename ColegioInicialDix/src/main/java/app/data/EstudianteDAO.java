@@ -1,7 +1,6 @@
 package app.data;
 
 import java.sql.Connection;
-
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -28,17 +27,23 @@ public class EstudianteDAO implements IEstudiante {
 
         try {
 
-            CallableStatement cs =
-                cn.prepareCall("{CALL sp_buscar_estudiante_relacion(?)}");
+            PreparedStatement ps = cn.prepareStatement(
+                "SELECT * FROM estudiante WHERE dni = ?"
+            );
 
-            cs.setString(1, dni);
+            ps.setString(1, dni);
 
-            ResultSet rs = cs.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-            if(rs.next()){
-                e = mapear(rs);
-                e.setNombreApoderado(rs.getString("nombre_apoderado"));
-                e.setRelacion(rs.getString("relacion"));
+            if (rs.next()) {
+                e = new Estudiante();
+
+                e.setIdEstudiante(rs.getInt("id_estudiante"));
+                e.setDni(rs.getString("dni"));
+                e.setNombres(rs.getString("nombres"));
+                e.setApellidos(rs.getString("apellidos"));
+                e.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
+                e.setSexo(rs.getString("sexo"));
             }
 
         } catch (Exception ex) {
@@ -58,7 +63,7 @@ public class EstudianteDAO implements IEstudiante {
 
             cs.setString(1, e.getDni());
             cs.setString(2, e.getNombres());
-            cs.setString(3, e.getApellidos());
+            cs.setString(3, e.getApellidos()); // ✔ consistente
             cs.setDate(4, e.getFechaNacimiento());
             cs.setString(5, e.getSexo());
 
@@ -82,7 +87,7 @@ public class EstudianteDAO implements IEstudiante {
 
             cs.setString(1, e.getDni());
             cs.setString(2, e.getNombres());
-            cs.setString(3, e.getApellidos());
+            cs.setString(3, e.getApellidos()); // ✔ consistente
             cs.setDate(4, e.getFechaNacimiento());
             cs.setString(5, e.getSexo());
 
@@ -241,6 +246,7 @@ public class EstudianteDAO implements IEstudiante {
         return false;
     }
 
+    // 🔥 MÉTODO CORREGIDO
     private Estudiante mapear(ResultSet rs) throws Exception {
 
         Estudiante e = new Estudiante();
@@ -248,13 +254,13 @@ public class EstudianteDAO implements IEstudiante {
         e.setIdEstudiante(rs.getInt("id_estudiante"));
         e.setDni(rs.getString("dni"));
         e.setNombres(rs.getString("nombres"));
-        e.setApellidos(rs.getString("apellidos"));
+        e.setApellidos(rs.getString("apellidos")); // 👈 CLAVE
         e.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
         e.setSexo(rs.getString("sexo"));
 
         return e;
     }
-    
+
     public int registrarYRetornarId(Estudiante e) {
 
         try {
@@ -284,5 +290,4 @@ public class EstudianteDAO implements IEstudiante {
 
         return 0;
     }
-    
 }

@@ -13,7 +13,8 @@ public class Estudiante {
 	
 	private String nombreApoderado;
 	private String relacion;
-	
+	private String apellidoPaterno;
+	private String apellidoMaterno;
 	
 	public Estudiante() {
 		idEstudiante = 0;
@@ -22,6 +23,22 @@ public class Estudiante {
 		apellidos = "";
 		fechaNacimiento = null;
 		sexo = "";
+	}
+
+	public String getApellidoPaterno() {
+		return apellidoPaterno;
+	}
+
+	public void setApellidoPaterno(String apellidoPaterno) {
+		this.apellidoPaterno = apellidoPaterno;
+	}
+
+	public String getApellidoMaterno() {
+		return apellidoMaterno;
+	}
+
+	public void setApellidoMaterno(String apellidoMaterno) {
+		this.apellidoMaterno = apellidoMaterno;
 	}
 
 	public int getIdEstudiante() {
