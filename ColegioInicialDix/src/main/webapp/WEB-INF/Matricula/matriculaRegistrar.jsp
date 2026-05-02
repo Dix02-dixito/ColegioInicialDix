@@ -195,11 +195,9 @@ document.getElementById("dniEstudiante").addEventListener("input", e=>{
     e.target.value = e.target.value.replace(/[^0-9]/g,'');
 });
 
-/* FORMATEAR FECHA */
+/* FORMATEAR */
 function formatearFecha(fecha){
-    if(!fecha) return "";
-    let f = new Date(fecha);
-    return f.toLocaleDateString('es-PE');
+    return fecha;
 }
 
 function mostrarSexo(sexo){
@@ -242,8 +240,8 @@ function buscar() {
         document.getElementById("nomEst").value = data.nombres;
         document.getElementById("apellidoPaterno").value = data.apellidoPaterno;
         document.getElementById("apellidoMaterno").value = data.apellidoMaterno;
-        document.getElementById("fechaEst").value = formatearFecha(data.fecha);
         document.getElementById("sexoEst").value = mostrarSexo(data.sexo);
+        document.getElementById("fechaEst").value = data.fecha;
 
         document.getElementById("nomApo").value = data.nombreApoderado;
         document.getElementById("dniApo").value = data.dniApoderado;

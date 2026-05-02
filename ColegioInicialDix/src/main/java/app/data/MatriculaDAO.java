@@ -14,7 +14,7 @@ import app.modelos.Matricula;
 public class MatriculaDAO implements IMatricula {
 
     private Connection cn;
-
+    
     public MatriculaDAO() {
         cn = MySQLConexion.obtenerConexion();
     }

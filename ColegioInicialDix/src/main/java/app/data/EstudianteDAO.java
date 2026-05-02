@@ -67,7 +67,7 @@ public class EstudianteDAO implements IEstudiante {
 
             cs.setString(1, e.getDni());
             cs.setString(2, e.getNombres());
-            cs.setString(3, e.getApellidos()); // ✔ consistente
+            cs.setString(3, e.getApellidos()); // 
             cs.setDate(4, e.getFechaNacimiento());
             cs.setString(5, e.getSexo());
 
@@ -91,7 +91,7 @@ public class EstudianteDAO implements IEstudiante {
 
             cs.setString(1, e.getDni());
             cs.setString(2, e.getNombres());
-            cs.setString(3, e.getApellidos()); // ✔ consistente
+            cs.setString(3, e.getApellidos()); // 
             cs.setDate(4, e.getFechaNacimiento());
             cs.setString(5, e.getSexo());
 
@@ -250,7 +250,7 @@ public class EstudianteDAO implements IEstudiante {
         return false;
     }
 
-    // 🔥 MÉTODO CORREGIDO
+
     private Estudiante mapear(ResultSet rs) throws Exception {
 
         Estudiante e = new Estudiante();
@@ -258,7 +258,7 @@ public class EstudianteDAO implements IEstudiante {
         e.setIdEstudiante(rs.getInt("id_estudiante"));
         e.setDni(rs.getString("dni"));
         e.setNombres(rs.getString("nombres"));
-        e.setApellidos(rs.getString("apellidos")); // 👈 CLAVE
+        e.setApellidos(rs.getString("apellidos")); 
         e.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
         e.setSexo(rs.getString("sexo"));
 
