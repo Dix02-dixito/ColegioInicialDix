@@ -29,8 +29,8 @@
 <div class="sidebar">
     <h2>Dix Academy</h2>
     <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
-    <a href="#">MATRICULA</a>
-	<a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
+    <a href="${pageContext.request.contextPath}/Mantenimiento/Apoderado">APODERADO</a>
     <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
     <a href="${pageContext.request.contextPath}/actividad">ACTIVIDAD</a>
     <hr>

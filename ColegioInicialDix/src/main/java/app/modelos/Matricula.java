@@ -31,6 +31,7 @@ private String relacion;
 private String nombreNivel;
 
 
+
 public Matricula(){
 
 idMatricula=0;

@@ -1,35 +1,19 @@
 package app.data.interfaces;
 
 import java.util.List;
-import java.sql.ResultSet;
-import app.modelos.Apoderado;
 import app.modelos.Matricula;
 
 public interface IMatricula {
 
-    Matricula buscarMatriculaActiva(String dni);
-    
-    Matricula buscarMatriculaInactiva(String dni);
+    public List<Matricula> listarMatriculas();
 
-    boolean editarMatricula(Matricula matricula);
+    public Matricula buscarMatriculaActivaPorDni(String dni);
 
-    boolean renovarMatricula(int idMatricula);
+    public List<String[]> listarApoderadosPorEstudiante(int idEstudiante);
 
-    boolean eliminarMatricula(int idMatricula);
+    public List<String[]> listarNiveles();
 
-    boolean cambiarApoderado(int idMatricula, int idEstudiante, int idNuevoApoderado);
+    public boolean editarMatricula(Matricula m);
 
-    Apoderado buscarApoderadoPorDni(String dni, int idEstudiante);
-
-    boolean existeRelacion(int idEstudiante, int idApoderado);
-
-    List<Matricula> listarRelacionApoderadoEstudiante(int idEstudiante);
-
-    List<String> listarNiveles();
-
-    Matricula mapearMatricula(ResultSet rs) throws Exception;
-    
-    public boolean existeMatriculaActiva(int idEstudiante);
-    
-    public boolean generar(Matricula m);
+    public boolean cambiarEstado(int idMatricula, String estado);
 }
