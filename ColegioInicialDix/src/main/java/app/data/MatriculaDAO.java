@@ -238,5 +238,57 @@ public class MatriculaDAO implements IMatricula {
 
         return m;
     }
+    
+    public boolean existeMatriculaActiva(int idEstudiante) {
+
+        String sql = "SELECT COUNT(*) FROM matricula WHERE id_estudiante=? AND estado='ACTIVO'";
+
+    try (Connection con = MySQLConexion.obtenerConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, idEstudiante);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException("Error al validar matrícula activa: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+
+    public boolean generar(Matricula m) {
+    	String sql = "INSERT INTO matricula (id_estudiante, id_apoderado, id_nivel, anio, estado, observacion) VALUES (?, ?, ?, ?, ?, ?)";
+
+    try (Connection con = MySQLConexion.obtenerConexion();
+         PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+        ps.setInt(1, m.getIdEstudiante());
+        ps.setInt(2, m.getIdApoderado());
+        ps.setInt(3, m.getIdNivel());
+        ps.setInt(4, m.getAnio());
+        ps.setString(5, m.getEstado());
+        ps.setString(6, m.getObservacion());
+
+        int filas = ps.executeUpdate();
+
+        if (filas > 0) {
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                m.setIdMatricula(rs.getInt(1));
+            }
+            return true;
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException("Error al generar matrícula: " + e.getMessage());
+    	    }
+
+    	    return false;
+    	}
 
 }

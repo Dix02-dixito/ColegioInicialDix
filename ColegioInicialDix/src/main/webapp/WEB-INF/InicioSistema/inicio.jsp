@@ -30,6 +30,7 @@
 <div class="sidebar">
     <h2>Dix Academy</h2>
     <a href="${pageContext.request.contextPath}/Inicio">INICIO</a>
+    <a href="${pageContext.request.contextPath}/MatriculaRegistrar">GENERAR MATRICULA</a>
     <a href="${pageContext.request.contextPath}/Mantenimiento/Matricula">MATRICULA</a>
     <a href="${pageContext.request.contextPath}/MantenimientoApoderado">APODERADO</a>
     <a href="${pageContext.request.contextPath}/Mantenimiento/Estudiante">ESTUDIANTE</a>
